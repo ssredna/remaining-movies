@@ -1,2 +1,11 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	export let data;
+</script>
+
+<div class="text-column">
+	<h1>API-test</h1>
+
+	<p>I want to present some data loaded from the server here</p>
+
+	<pre>{data.pokemon.name}</pre>
+</div>
