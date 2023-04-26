@@ -2,10 +2,10 @@
 	export let data;
 </script>
 
-<div class="text-column">
-	<h1>API-test</h1>
+<div>
+	<h1>Remaining movies</h1>
 
-	<p>I want to present some data loaded from the server here</p>
+	<p>How many movies do I have left until 1000?</p>
 
-	<pre>{data.pokemon.name}</pre>
+	<pre>{data.remainingMovies}</pre>
 </div>
