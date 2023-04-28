@@ -2,35 +2,70 @@
 	export let data;
 </script>
 
-<div class="container">
-	<h1 class="number">{data.remainingMovies}</h1>
-	<p class="text">filmer igjen til jeg har sett 1000</p>
-</div>
+<section class="hero">
+	<h1>{data.remainingMovies}</h1>
+	<p>filmer igjen til jeg har sett 1000</p>
+</section>
+<section class="latest-movies-section">
+	<h2>De siste filmene jeg har sett:</h2>
+	<div class="latest-movies-container">
+		{#each data.movies as movie}
+			<div class="movie">
+				<p>{movie.title}</p>
+				<img src={movie.posterUrl} alt={movie.title} class="poster" />
+			</div>
+		{/each}
+	</div>
+</section>
 
 <style>
-	.container {
-		height: 100vh;
+	h1 {
+		color: rgb(150, 54, 70);
+		font-size: 10rem;
+		margin: 1rem 0;
+	}
+
+	h2 {
+		color: rgb(150, 54, 70);
+		font-size: 1.5rem;
+		margin: 1rem 0;
+	}
+
+	p {
+		color: rgb(150, 54, 70);
+		font-size: 1.5rem;
+		margin: 1rem 0;
+	}
+
+	.hero {
+		padding: 8rem 0;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 		align-items: center;
 	}
 
-	.number {
-		color: rgb(150, 54, 70);
-		font-size: 8rem;
+	.latest-movies-section {
+		display: grid;
+		justify-items: center;
 	}
 
-	.text {
-		color: rgb(150, 54, 70);
-		font-size: 1.5rem;
+	.latest-movies-container {
+		display: flex;
+		gap: 2rem;
 	}
 
-	:global(html, body) {
-		height: 100%;
-		width: 100%;
-		padding: 0;
-		margin: 0;
+	.movie {
+		background-color: rgb(255, 176, 112);
+		padding: 1rem;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.poster {
+		height: 350px;
+		border-radius: 5px;
 	}
 
 	:global(body) {
