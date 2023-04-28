@@ -1,4 +1,6 @@
 <script lang="ts">
+	import tmdbLogo from '$lib/images/tmdb-logo.svg';
+	import traktLogo from '$lib/images/trakt-logo.svg';
 	export let data;
 </script>
 
@@ -17,6 +19,10 @@
 		{/each}
 	</div>
 </section>
+<footer>
+	<img class="logo" src={traktLogo} alt="Trakt logo" />
+	<img class="logo" src={tmdbLogo} alt="The Movie DB logo" />
+</footer>
 
 <style>
 	h1 {
@@ -66,6 +72,17 @@
 	.poster {
 		height: 350px;
 		border-radius: 5px;
+	}
+
+	footer {
+		padding: 4rem 2rem 2rem 0;
+		display: flex;
+		justify-content: flex-end;
+		gap: 2rem;
+	}
+
+	.logo {
+		width: 3rem;
 	}
 
 	:global(body) {
