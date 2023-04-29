@@ -4,6 +4,10 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<title>Nedtelling til 1000 filmer</title>
+</svelte:head>
+
 <section class="hero">
 	<h1 class="linear-wipe">{data.remainingMovies}</h1>
 	<p>filmer igjen til jeg har sett 1000</p>
