@@ -5,7 +5,7 @@
 </script>
 
 <section class="hero">
-	<h1>{data.remainingMovies}</h1>
+	<h1 class="linear-wipe">{data.remainingMovies}</h1>
 	<p>filmer igjen til jeg har sett 1000</p>
 </section>
 <section class="latest-movies-section">
@@ -99,6 +99,24 @@
 
 	.logo {
 		width: 3rem;
+	}
+
+	@keyframes move-bg {
+		to {
+			background-position: var(--bg-size) 0;
+		}
+	}
+
+	.linear-wipe {
+		--bg-size: 400%;
+		--color-one: hsl(350, 47%, 40%);
+		--color-two: hsl(27, 100%, 56%);
+		background: linear-gradient(90deg, var(--color-one), var(--color-two), var(--color-one)) 0 0 /
+			var(--bg-size) 100%;
+		color: transparent;
+		-webkit-background-clip: text;
+		background-clip: text;
+		animation: move-bg 8s infinite linear;
 	}
 
 	:global(body) {
