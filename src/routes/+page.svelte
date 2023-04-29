@@ -41,6 +41,7 @@
 		color: rgb(150, 54, 70);
 		font-size: 1.5rem;
 		margin: 1rem 0;
+		text-align: center;
 	}
 
 	.hero {
@@ -56,8 +57,28 @@
 	}
 
 	.latest-movies-container {
-		display: flex;
+		display: grid;
 		gap: 2rem;
+	}
+
+	.poster {
+		height: 300px;
+		border-radius: 5px;
+	}
+
+	@media only screen and (min-width: 900px) {
+		h1 {
+			font-size: 20rem;
+		}
+		.latest-movies-container {
+			display: flex;
+			gap: 2rem;
+			padding: 0 1rem;
+		}
+
+		.poster {
+			height: 350px;
+		}
 	}
 
 	.movie {
@@ -67,11 +88,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-
-	.poster {
-		height: 350px;
-		border-radius: 5px;
 	}
 
 	footer {
