@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SearchBox from '$lib/SearchBox.svelte';
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	export let data;
@@ -8,31 +9,47 @@
 	<title>Nedtelling til 1000 filmer</title>
 </svelte:head>
 
-<section class="hero">
-	<h1 class="linear-wipe">{data.remainingMovies}</h1>
-	<p>filmer igjen til jeg har sett 1000</p>
-</section>
-<section class="latest-movies-section">
-	<h2>De siste filmene jeg har sett:</h2>
-	<div class="latest-movies-container">
-		{#each data.movies as movie}
-			<div class="movie">
-				<p>{movie.title}</p>
-				<img src={movie.posterUrl} alt={movie.title} class="poster" />
-			</div>
-		{/each}
-	</div>
-</section>
-<footer>
-	<img class="logo" src={traktLogo} alt="Trakt logo" />
-	<img class="logo" src={tmdbLogo} alt="The Movie DB logo" />
-</footer>
+<div class="container">
+	<section class="hero">
+		<h1 class="linear-wipe">{data.remainingMovies}</h1>
+		<p>filmer igjen til jeg har sett 1000</p>
+	</section>
+	<section class="history">
+		<h2>De siste filmene jeg har sett:</h2>
+		<div class="latest-movies-container">
+			{#each data.movies as movie}
+				<div class="movie">
+					<p>{movie.title}</p>
+					<img src={movie.posterUrl} alt={movie.title} class="poster" />
+				</div>
+			{/each}
+		</div>
+	</section>
+	<section class="suggestions">
+		<h2>Foreslå film nr 1000</h2>
+		<SearchBox />
+	</section>
+	<footer>
+		<img class="logo" src={traktLogo} alt="Trakt logo" />
+		<img class="logo" src={tmdbLogo} alt="The Movie DB logo" />
+	</footer>
+</div>
 
 <style>
+	.container {
+		display: grid;
+		grid-template-areas:
+			'hero'
+			'suggestions'
+			'history'
+			'footer';
+		justify-items: center;
+	}
+
 	h1 {
 		color: rgb(150, 54, 70);
 		font-size: 10rem;
-		margin: 1rem 0;
+		margin: 0;
 	}
 
 	h2 {
@@ -49,13 +66,15 @@
 	}
 
 	.hero {
+		grid-area: hero;
 		padding: 8rem 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
 
-	.latest-movies-section {
+	.history {
+		grid-area: history;
 		display: grid;
 		justify-items: center;
 	}
@@ -70,10 +89,24 @@
 		border-radius: 5px;
 	}
 
+	.suggestions {
+		grid-area: suggestions;
+	}
+
 	@media only screen and (min-width: 900px) {
+		.container {
+			display: grid;
+			grid-template-areas:
+				'hero suggestions'
+				'history suggestions'
+				'footer footer';
+			grid-template-columns: 1fr auto;
+		}
+
 		h1 {
 			font-size: 20rem;
 		}
+
 		.latest-movies-container {
 			display: flex;
 			gap: 2rem;
@@ -82,6 +115,11 @@
 
 		.poster {
 			height: 350px;
+		}
+
+		.suggestions {
+			padding-top: 10rem;
+			padding-right: 5rem;
 		}
 	}
 
@@ -95,6 +133,7 @@
 	}
 
 	footer {
+		grid-area: footer;
 		padding: 4rem 2rem 2rem 0;
 		display: flex;
 		justify-content: flex-end;
