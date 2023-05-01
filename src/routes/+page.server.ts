@@ -17,6 +17,7 @@ interface stats {
 
 interface movie {
 	poster_path: string;
+	title: string;
 }
 
 export const load = async ({ fetch }) => {
@@ -59,4 +60,18 @@ export const load = async ({ fetch }) => {
 		remainingMovies,
 		movies
 	};
+};
+
+export const actions = {
+	search: async ({ fetch, request }) => {
+		const queryFormData = await request.formData();
+		const queryString = queryFormData.get('q') as string;
+		const url =
+			`https://api.themoviedb.org/3/search/movie?api_key=${VITE_TMDB_CLIENT_ID}&query=` +
+			encodeURIComponent(queryString);
+
+		const response = await fetch(url);
+		const result = await response.json();
+		return { searchResults: result.results };
+	}
 };
