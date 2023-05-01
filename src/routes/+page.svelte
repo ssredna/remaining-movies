@@ -41,6 +41,7 @@
 
 <style>
 	.container {
+		padding-top: 8rem;
 		display: grid;
 		grid-template-areas:
 			'hero'
@@ -71,7 +72,6 @@
 
 	.hero {
 		grid-area: hero;
-		padding: 8rem 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -95,6 +95,8 @@
 
 	.suggestions {
 		grid-area: suggestions;
+		width: 80%;
+		box-sizing: border-box;
 	}
 
 	@media only screen and (min-width: 900px) {
@@ -104,7 +106,7 @@
 				'hero suggestions'
 				'history suggestions'
 				'footer footer';
-			grid-template-columns: 1fr auto;
+			grid-template-columns: 2fr 1fr;
 		}
 
 		h1 {
@@ -114,7 +116,7 @@
 		.latest-movies-container {
 			display: flex;
 			gap: 2rem;
-			padding: 0 1rem;
+			padding: 0 2rem;
 		}
 
 		.poster {
@@ -122,8 +124,8 @@
 		}
 
 		.suggestions {
-			padding-top: 10rem;
-			padding-right: 5rem;
+			padding-top: 4rem;
+			padding-right: 2rem;
 		}
 	}
 
