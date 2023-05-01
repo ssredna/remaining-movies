@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SearchBox from '$lib/SearchBox.svelte';
+	import SearchBox from './SearchBox.svelte';
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	export let data;
