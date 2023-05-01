@@ -15,9 +15,10 @@ interface stats {
 	};
 }
 
-interface movie {
+export interface movie {
 	poster_path: string;
 	title: string;
+	id: number;
 }
 
 export const load = async ({ fetch }) => {
@@ -70,8 +71,10 @@ export const actions = {
 			`https://api.themoviedb.org/3/search/movie?api_key=${VITE_TMDB_CLIENT_ID}&query=` +
 			encodeURIComponent(queryString);
 
-		const response = await fetch(url);
-		const result = await response.json();
-		return { searchResults: result.results };
+		const movies: movie[] = await fetch(url)
+			.then((res) => res.json())
+			.then((res) => res.results);
+		// const result = await response.json();
+		return { searchResults: movies };
 	}
 };

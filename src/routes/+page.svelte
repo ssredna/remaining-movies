@@ -1,14 +1,10 @@
 <script lang="ts">
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
-	import noImage from '$lib/images/no-image.png';
+	import Suggestions from './Suggestions.svelte';
 
 	export let data;
 	export let form;
-
-	function posterUrlFromPosterPath(posterPath: string) {
-		return `https://image.tmdb.org/t/p/w92${posterPath}`;
-	}
 </script>
 
 <svelte:head>
@@ -20,6 +16,7 @@
 		<h1 class="linear-wipe">{data.remainingMovies}</h1>
 		<p>filmer igjen til jeg har sett 1000</p>
 	</section>
+
 	<section class="history">
 		<h2>De siste filmene jeg har sett:</h2>
 		<div class="latest-movies-container">
@@ -31,29 +28,11 @@
 			{/each}
 		</div>
 	</section>
+
 	<section class="suggestions">
-		<form method="POST" action="?/search">
-			<label class="h2-label">
-				Foreslå film nr 1000<br />
-				<input type="search" name="q" />
-			</label>
-			{#if form?.searchResults}
-				{#each form.searchResults as movie}
-					<div>
-						<object
-							data={posterUrlFromPosterPath(movie.poster_path)}
-							type="image/jpeg"
-							class="search-poster"
-							title={movie.title}
-						>
-							<img src={noImage} alt="Name" class="search-poster" />
-						</object>
-						{@html movie.title}
-					</div>
-				{/each}
-			{/if}
-		</form>
+		<Suggestions searchResults={form?.searchResults} />
 	</section>
+
 	<footer>
 		<img class="logo" src={traktLogo} alt="Trakt logo" />
 		<img class="logo" src={tmdbLogo} alt="The Movie DB logo" />
@@ -81,11 +60,6 @@
 		color: rgb(150, 54, 70);
 		font-size: 1.5rem;
 		margin: 1rem 0;
-	}
-
-	.h2-label {
-		color: rgb(150, 54, 70);
-		font-size: 1.5rem;
 	}
 
 	p {
@@ -117,10 +91,6 @@
 	.poster {
 		height: 300px;
 		border-radius: 5px;
-	}
-
-	.search-poster {
-		height: 75px;
 	}
 
 	.suggestions {
@@ -170,7 +140,7 @@
 		grid-area: footer;
 		padding: 4rem 2rem 2rem 0;
 		display: flex;
-		justify-content: flex-end;
+		justify-self: flex-end;
 		gap: 2rem;
 	}
 
