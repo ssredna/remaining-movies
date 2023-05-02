@@ -1,5 +1,6 @@
 <script lang="ts">
 	import noImage from '$lib/images/no-image.png';
+	import { mediumPosterUrlFromPosterPath, smallPosterUrlFromPosterPath } from '$lib/utils';
 	import type { movie } from './+page.server';
 
 	export let searchResults: movie[] | undefined;
@@ -12,14 +13,6 @@
 			return;
 
 		isFocused = false;
-	}
-
-	function smallPosterUrlFromPosterPath(posterPath: string) {
-		return `https://image.tmdb.org/t/p/w92${posterPath}`;
-	}
-
-	function mediumPosterUrlFromPosterPath(posterPath: string) {
-		return `https://image.tmdb.org/t/p/w154${posterPath}`;
 	}
 </script>
 
