@@ -5,9 +5,21 @@
 	export let searchResults: movie[] | undefined;
 
 	let isFocused = true;
+	let selectedMovie: movie | undefined;
 
-	function posterUrlFromPosterPath(posterPath: string) {
+	function handleDropdownFocusLoss({ relatedTarget }: FocusEvent) {
+		if (relatedTarget instanceof HTMLElement && relatedTarget.classList.contains('result-item'))
+			return;
+
+		isFocused = false;
+	}
+
+	function smallPosterUrlFromPosterPath(posterPath: string) {
 		return `https://image.tmdb.org/t/p/w92${posterPath}`;
+	}
+
+	function mediumPosterUrlFromPosterPath(posterPath: string) {
+		return `https://image.tmdb.org/t/p/w154${posterPath}`;
 	}
 </script>
 
@@ -19,18 +31,24 @@
 			name="q"
 			autofocus
 			autocomplete="off"
-			on:focusout={() => (isFocused = false)}
+			on:focusout={handleDropdownFocusLoss}
 			on:focusin={() => (isFocused = true)}
 		/>
 	</form>
 
-	{#if searchResults && isFocused}
-		<div class="search-results">
+	{#if searchResults}
+		<div class="search-results" class:isFocused>
 			{#each searchResults as movie}
-				<div class="result-item">
+				<button
+					class="result-item"
+					on:click={() => {
+						selectedMovie = movie;
+						isFocused = false;
+					}}
+				>
 					<div>
 						<object
-							data={posterUrlFromPosterPath(movie.poster_path)}
+							data={smallPosterUrlFromPosterPath(movie.poster_path)}
 							type="image/jpeg"
 							class="poster"
 							title={movie.title}
@@ -41,9 +59,39 @@
 					<div class="result-item-text">
 						{@html movie.title}
 					</div>
-				</div>
+				</button>
 			{/each}
 		</div>
+	{/if}
+
+	{#if selectedMovie}
+		<div class="suggestion-item">
+			<div>
+				<object
+					data={mediumPosterUrlFromPosterPath(selectedMovie.poster_path)}
+					type="image/jpeg"
+					class="suggestion-poster"
+					title={selectedMovie.title}
+				>
+					<img src={noImage} alt="Name" class="suggestion-poster" />
+				</object>
+			</div>
+			<div class="suggestion-item-text">
+				{@html selectedMovie.title}
+			</div>
+		</div>
+
+		<form>
+			<input type="hidden" />
+			<input
+				type="submit"
+				value="Foreslå film"
+				on:click={() => {
+					alert(selectedMovie?.title);
+					selectedMovie = undefined;
+				}}
+			/>
+		</form>
 	{/if}
 </div>
 
@@ -64,6 +112,11 @@
 	.search-results {
 		position: absolute;
 		width: 100%;
+		visibility: hidden;
+	}
+
+	.search-results.isFocused {
+		visibility: visible;
 	}
 
 	.result-item {
@@ -72,6 +125,22 @@
 		gap: 0.5rem;
 		align-items: center;
 		padding: 0.3rem;
+		border: 0;
+		width: 100%;
+		cursor: pointer;
+	}
+
+	.result-item:hover {
+		background-color: rgb(150, 205, 217);
+	}
+
+	.suggestion-item {
+		background-color: rgb(255, 176, 112);
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		padding: 0.3rem;
+		margin: 0.5rem 0;
 	}
 
 	.result-item-text {
@@ -81,7 +150,19 @@
 		text-overflow: ellipsis;
 	}
 
+	.suggestion-item-text {
+		color: rgb(150, 54, 70);
+		font-size: 1.3rem;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
 	.poster {
 		height: 75px;
+	}
+
+	.suggestion-poster {
+		height: 150px;
 	}
 </style>
