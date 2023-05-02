@@ -1,6 +1,8 @@
 <script lang="ts">
+	import noImage from '$lib/images/no-image.png';
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
+	import { smallPosterUrlFromPosterPath } from '$lib/utils';
 	import Suggestions from './Suggestions.svelte';
 
 	export let data;
@@ -33,9 +35,21 @@
 		<Suggestions searchResults={form?.searchResults} />
 		<h2>Foreslåtte filmer:</h2>
 		{#each data.suggestedMovies as suggestedMovie}
-			<p>
-				{suggestedMovie.title}
-			</p>
+			<div class="suggestion-item">
+				<div>
+					<object
+						data={smallPosterUrlFromPosterPath(suggestedMovie.poster_path)}
+						type="image/jpeg"
+						class="suggestion-poster"
+						title={suggestedMovie.title}
+					>
+						<img src={noImage} alt="Name" class="suggestion-poster" />
+					</object>
+				</div>
+				<div class="suggestion-item-text">
+					{@html suggestedMovie.title}
+				</div>
+			</div>
 		{/each}
 	</section>
 
@@ -133,6 +147,28 @@
 			padding-top: 4rem;
 			padding-right: 2rem;
 		}
+	}
+
+	.suggestion-item {
+		background-color: rgb(245, 230, 99);
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		padding: 0.3rem;
+		border: 0;
+		width: 100%;
+	}
+
+	.suggestion-poster {
+		height: 75px;
+	}
+
+	.suggestion-item-text {
+		color: rgb(150, 54, 70);
+		font-size: 1.3rem;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.movie {

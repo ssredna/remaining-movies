@@ -1,6 +1,6 @@
 import {
-	VITE_PUBLIC_SUPABASE_ANON_KEY,
-	VITE_PUBLIC_SUPABASE_URL,
+	VITE_SUPABASE_ANON_KEY,
+	VITE_SUPABASE_URL,
 	VITE_TMDB_CLIENT_ID,
 	VITE_TRAKT_CLIENT_ID
 } from '$env/static/private';
@@ -40,11 +40,11 @@ export const load = async ({ fetch }) => {
 	}).then((res) => res.json());
 
 	const suggestedMoviesPromise: Promise<suggestedMovie[]> = fetch(
-		`${VITE_PUBLIC_SUPABASE_URL}/rest/v1/suggested-movies?select=*`,
+		`${VITE_SUPABASE_URL}/rest/v1/suggested-movies?select=*`,
 		{
 			headers: {
-				apikey: VITE_PUBLIC_SUPABASE_ANON_KEY,
-				Authorization: `Bearer ${VITE_PUBLIC_SUPABASE_ANON_KEY}`
+				apikey: VITE_SUPABASE_ANON_KEY,
+				Authorization: `Bearer ${VITE_SUPABASE_ANON_KEY}`
 			}
 		}
 	).then((res) => res.json());
@@ -108,11 +108,11 @@ export const actions = {
 			poster_path: suggestionFormData.get('poster_path')
 		};
 
-		fetch(`${VITE_PUBLIC_SUPABASE_URL}/rest/v1/suggested-movies`, {
+		fetch(`${VITE_SUPABASE_URL}/rest/v1/suggested-movies`, {
 			method: 'POST',
 			headers: {
-				apikey: VITE_PUBLIC_SUPABASE_ANON_KEY,
-				Authorization: `Bearer ${VITE_PUBLIC_SUPABASE_ANON_KEY}`,
+				apikey: VITE_SUPABASE_ANON_KEY,
+				Authorization: `Bearer ${VITE_SUPABASE_ANON_KEY}`,
 				'Content-Type': 'application/json',
 				Prefer: 'return=minimal'
 			},
