@@ -31,8 +31,11 @@
 
 	<section class="suggestions">
 		<Suggestions searchResults={form?.searchResults} />
+		<h2>Foreslåtte filmer:</h2>
 		{#each data.suggestedMovies as suggestedMovie}
-			{suggestedMovie.title}
+			<p>
+				{suggestedMovie.title}
+			</p>
 		{/each}
 	</section>
 

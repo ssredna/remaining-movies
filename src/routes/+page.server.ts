@@ -96,7 +96,29 @@ export const actions = {
 		const movies: movie[] = await fetch(url)
 			.then((res) => res.json())
 			.then((res) => res.results);
-		// const result = await response.json();
+
 		return { searchResults: movies };
+	},
+	suggest: async ({ fetch, request }) => {
+		const suggestionFormData = await request.formData();
+
+		const requestObject = {
+			id: suggestionFormData.get('id'),
+			title: suggestionFormData.get('title'),
+			poster_path: suggestionFormData.get('poster_path')
+		};
+
+		fetch(`${VITE_PUBLIC_SUPABASE_URL}/rest/v1/suggested-movies`, {
+			method: 'POST',
+			headers: {
+				apikey: VITE_PUBLIC_SUPABASE_ANON_KEY,
+				Authorization: `Bearer ${VITE_PUBLIC_SUPABASE_ANON_KEY}`,
+				'Content-Type': 'application/json',
+				Prefer: 'return=minimal'
+			},
+			body: JSON.stringify(requestObject)
+		});
+
+		return { requestObject };
 	}
 };

@@ -80,19 +80,14 @@
 				{@html selectedMovie.title}
 			</div>
 		</div>
-
-		<form>
-			<input type="hidden" />
-			<input
-				type="submit"
-				value="Foreslå film"
-				on:click={() => {
-					alert(selectedMovie?.title);
-					selectedMovie = undefined;
-				}}
-			/>
-		</form>
 	{/if}
+
+	<form method="POST" action="?/suggest">
+		<input type="hidden" name="id" value={selectedMovie?.id} />
+		<input type="hidden" name="title" value={selectedMovie?.title} />
+		<input type="hidden" name="poster_path" value={selectedMovie?.poster_path} />
+		<input type="submit" value="Foreslå film" />
+	</form>
 </div>
 
 <style>
