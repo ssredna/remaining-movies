@@ -1,4 +1,9 @@
-import { VITE_TMDB_CLIENT_ID, VITE_TRAKT_CLIENT_ID } from '$env/static/private';
+import {
+	VITE_PUBLIC_SUPABASE_ANON_KEY,
+	VITE_PUBLIC_SUPABASE_URL,
+	VITE_TMDB_CLIENT_ID,
+	VITE_TRAKT_CLIENT_ID
+} from '$env/static/private';
 
 interface history {
 	movie: {
@@ -21,6 +26,10 @@ export interface movie {
 	id: number;
 }
 
+type suggestedMovie = movie & {
+	votes: number;
+};
+
 export const load = async ({ fetch }) => {
 	const statsPromise: Promise<stats> = fetch('https://api.trakt.tv/users/ssredna/stats', {
 		headers: {
@@ -29,6 +38,16 @@ export const load = async ({ fetch }) => {
 			'trakt-api-key': VITE_TRAKT_CLIENT_ID
 		}
 	}).then((res) => res.json());
+
+	const suggestedMoviesPromise: Promise<suggestedMovie[]> = fetch(
+		`${VITE_PUBLIC_SUPABASE_URL}/rest/v1/suggested-movies?select=*`,
+		{
+			headers: {
+				apikey: VITE_PUBLIC_SUPABASE_ANON_KEY,
+				Authorization: `Bearer ${VITE_PUBLIC_SUPABASE_ANON_KEY}`
+			}
+		}
+	).then((res) => res.json());
 
 	const history: history[] = await fetch(
 		'https://api.trakt.tv/users/ssredna/history/movies?limit=3',
@@ -49,7 +68,7 @@ export const load = async ({ fetch }) => {
 		)
 	);
 
-	const movies = latestMoviesTMDBData.map(({ poster_path }, i) => ({
+	const latestMovies = latestMoviesTMDBData.map(({ poster_path }, i) => ({
 		title: history[i].movie.title,
 		posterUrl: `https://image.tmdb.org/t/p/w400${poster_path}`
 	}));
@@ -57,9 +76,12 @@ export const load = async ({ fetch }) => {
 	const stats = await statsPromise;
 	const remainingMovies = 1000 - stats.movies.plays;
 
+	const suggestedMovies = await suggestedMoviesPromise;
+
 	return {
 		remainingMovies,
-		movies
+		latestMovies,
+		suggestedMovies
 	};
 };
 

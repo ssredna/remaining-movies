@@ -20,7 +20,7 @@
 	<section class="history">
 		<h2>De siste filmene jeg har sett:</h2>
 		<div class="latest-movies-container">
-			{#each data.movies as movie}
+			{#each data.latestMovies as movie}
 				<div class="movie">
 					<p>{movie.title}</p>
 					<img src={movie.posterUrl} alt={movie.title} class="poster" />
@@ -31,6 +31,9 @@
 
 	<section class="suggestions">
 		<Suggestions searchResults={form?.searchResults} />
+		{#each data.suggestedMovies as suggestedMovie}
+			{suggestedMovie.title}
+		{/each}
 	</section>
 
 	<footer>
