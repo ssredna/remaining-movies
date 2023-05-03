@@ -108,7 +108,7 @@
 
 	input[type='search'] {
 		padding: 12px 20px;
-		border-radius: 0.5rem;
+		border-radius: 8px;
 		background: rgb(225, 241, 244);
 		border-width: 2px;
 		border: 2px solid rgb(135, 199, 212);
@@ -163,8 +163,9 @@
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
-		padding: 0.3rem;
+		padding: 0.4rem;
 		margin: 0.5rem 0;
+		border-radius: 8px;
 	}
 
 	.result-item-text {
@@ -184,9 +185,12 @@
 
 	.poster {
 		height: 75px;
+		border-radius: 3px;
 	}
 
 	.suggestion-poster {
 		height: 150px;
+		border-radius: 5px;
+		display: block;
 	}
 </style>
