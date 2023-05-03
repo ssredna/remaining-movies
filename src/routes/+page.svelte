@@ -3,7 +3,7 @@
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import { smallPosterUrlFromPosterPath } from '$lib/utils';
-	import Suggestions from './Suggestions.svelte';
+	import Suggest from './Suggest.svelte';
 
 	export let data;
 	export let form;
@@ -34,7 +34,7 @@
 	</section>
 
 	<section class="suggestions">
-		<Suggestions searchResults={form?.searchResults} {suggestedMovieIds} />
+		<Suggest searchResults={form?.searchResults} {suggestedMovieIds} />
 		<h2>Foreslåtte filmer:</h2>
 		{#each data.suggestedMovies as suggestedMovie}
 			<div class="suggestion-item">
