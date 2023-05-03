@@ -22,7 +22,7 @@
 		<input
 			type="search"
 			name="q"
-			autofocus
+			autofocus={!!searchResults}
 			autocomplete="off"
 			on:focusout={handleDropdownFocusLoss}
 			on:focusin={() => (isFocused = true)}
@@ -57,8 +57,8 @@
 		</div>
 	{/if}
 
-	{#if selectedMovie}
-		<div class="suggestion-item">
+	<div class="suggestion-item">
+		{#if selectedMovie}
 			<div>
 				<object
 					data={mediumPosterUrlFromPosterPath(selectedMovie.poster_path)}
@@ -72,14 +72,14 @@
 			<div class="suggestion-item-text">
 				{@html selectedMovie.title}
 			</div>
-		</div>
-	{/if}
+		{/if}
+	</div>
 
 	<form method="POST" action="?/suggest">
 		<input type="hidden" name="id" value={selectedMovie?.id} />
 		<input type="hidden" name="title" value={selectedMovie?.title} />
 		<input type="hidden" name="poster_path" value={selectedMovie?.poster_path} />
-		<input type="submit" value="Foreslå film" />
+		<input type="submit" value="Foreslå film" disabled={!selectedMovie} />
 	</form>
 </div>
 
@@ -97,10 +97,29 @@
 		width: 100%;
 	}
 
+	input[type='search'] {
+		padding: 12px 20px;
+		border-radius: 0.5rem;
+		background: rgb(225, 241, 244);
+		border-width: 2px;
+		border: 2px solid rgb(71, 168, 189);
+		font-size: 1rem;
+	}
+
+	input[type='search']:focus {
+		outline: 1px solid rgb(71, 168, 189);
+	}
+
 	.search-results {
 		position: absolute;
 		width: 100%;
 		visibility: hidden;
+		height: 30rem;
+		overflow-y: scroll;
+		border-radius: 5px;
+		box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
+		background-color: rgb(165, 212, 223);
+		padding: 2px;
 	}
 
 	.search-results.isFocused {
@@ -116,14 +135,21 @@
 		border: 0;
 		width: 100%;
 		cursor: pointer;
+		border-radius: 5px;
 	}
 
 	.result-item:hover {
 		background-color: rgb(150, 205, 217);
 	}
 
+	.result-item:focus {
+		outline: 2px solid rgb(61, 148, 164);
+		border-radius: 4px;
+	}
+
 	.suggestion-item {
 		background-color: rgb(255, 176, 112);
+		height: 150px;
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
