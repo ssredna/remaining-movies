@@ -4,9 +4,14 @@
 	import type { movie } from './+page.server';
 
 	export let searchResults: movie[] | undefined;
+	export let suggestedMovieIds: number[];
 
 	let isFocused = true;
 	let selectedMovie: movie | undefined;
+
+	$: isSelectedMovieSuggested = selectedMovie
+		? suggestedMovieIds.includes(selectedMovie.id)
+		: false;
 
 	function handleDropdownFocusLoss({ relatedTarget }: FocusEvent) {
 		if (relatedTarget instanceof HTMLElement && relatedTarget.classList.contains('result-item'))
@@ -79,7 +84,11 @@
 		<input type="hidden" name="id" value={selectedMovie?.id} />
 		<input type="hidden" name="title" value={selectedMovie?.title} />
 		<input type="hidden" name="poster_path" value={selectedMovie?.poster_path} />
-		<input type="submit" value="Foreslå film" disabled={!selectedMovie} />
+		<input
+			type="submit"
+			value={isSelectedMovieSuggested ? 'Den er allerede foreslått' : 'Foreslå film'}
+			disabled={!selectedMovie || isSelectedMovieSuggested}
+		/>
 	</form>
 </div>
 
@@ -102,7 +111,7 @@
 		border-radius: 0.5rem;
 		background: rgb(225, 241, 244);
 		border-width: 2px;
-		border: 2px solid rgb(71, 168, 189);
+		border: 2px solid rgb(135, 199, 212);
 		font-size: 1rem;
 	}
 
@@ -113,13 +122,14 @@
 	.search-results {
 		position: absolute;
 		width: 100%;
-		visibility: hidden;
-		height: 30rem;
-		overflow-y: scroll;
-		border-radius: 5px;
-		box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
-		background-color: rgb(165, 212, 223);
+		max-height: 30rem;
 		padding: 2px;
+		border-radius: 5px;
+		box-sizing: border-box;
+		background-color: rgb(165, 212, 223);
+		box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
+		visibility: hidden;
+		overflow-y: auto;
 	}
 
 	.search-results.isFocused {
@@ -143,7 +153,7 @@
 	}
 
 	.result-item:focus {
-		outline: 2px solid rgb(61, 148, 164);
+		outline: 2px solid rgb(71, 168, 189);
 		border-radius: 4px;
 	}
 

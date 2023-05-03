@@ -7,6 +7,8 @@
 
 	export let data;
 	export let form;
+
+	$: suggestedMovieIds = data.suggestedMovies.map((movie) => movie.id);
 </script>
 
 <svelte:head>
@@ -32,7 +34,7 @@
 	</section>
 
 	<section class="suggestions">
-		<Suggestions searchResults={form?.searchResults} />
+		<Suggestions searchResults={form?.searchResults} {suggestedMovieIds} />
 		<h2>Foreslåtte filmer:</h2>
 		{#each data.suggestedMovies as suggestedMovie}
 			<div class="suggestion-item">
