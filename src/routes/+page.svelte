@@ -36,23 +36,25 @@
 	<section class="suggestions">
 		<Suggest searchResults={form?.searchResults} {suggestedMovieIds} />
 		<h2>Foreslåtte filmer:</h2>
-		{#each data.suggestedMovies as suggestedMovie}
-			<div class="suggestion-item">
-				<div>
-					<object
-						data={smallPosterUrlFromPosterPath(suggestedMovie.poster_path)}
-						type="image/jpeg"
-						class="suggestion-poster"
-						title={suggestedMovie.title}
-					>
-						<img src={noImage} alt="Name" class="suggestion-poster" />
-					</object>
+		<div class="suggestion-items">
+			{#each data.suggestedMovies as suggestedMovie}
+				<div class="suggestion-item">
+					<div>
+						<object
+							data={smallPosterUrlFromPosterPath(suggestedMovie.poster_path)}
+							type="image/jpeg"
+							class="suggestion-poster"
+							title={suggestedMovie.title}
+						>
+							<img src={noImage} alt="Name" class="suggestion-poster" />
+						</object>
+					</div>
+					<div class="suggestion-item-text">
+						{@html suggestedMovie.title}
+					</div>
 				</div>
-				<div class="suggestion-item-text">
-					{@html suggestedMovie.title}
-				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
 	</section>
 
 	<footer>
@@ -63,7 +65,7 @@
 
 <style>
 	.container {
-		padding-top: 8rem;
+		padding-top: 5rem;
 		display: grid;
 		grid-template-areas:
 			'hero'
@@ -121,6 +123,14 @@
 		box-sizing: border-box;
 	}
 
+	.suggestion-items {
+		background-color: rgb(245, 230, 99);
+		border-radius: 8px;
+		padding: 0.2rem;
+		max-height: 30rem;
+		overflow-y: auto;
+	}
+
 	@media only screen and (min-width: 900px) {
 		.container {
 			display: grid;
@@ -146,13 +156,14 @@
 		}
 
 		.suggestions {
-			padding-top: 4rem;
+			padding-top: 3rem;
 			padding-right: 2rem;
 		}
 	}
 
 	.suggestion-item {
-		background-color: rgb(245, 230, 99);
+		background-color: rgb(246, 234, 121);
+		box-sizing: border-box;
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
@@ -163,6 +174,7 @@
 
 	.suggestion-poster {
 		height: 75px;
+		border-radius: 3px;
 	}
 
 	.suggestion-item-text {
