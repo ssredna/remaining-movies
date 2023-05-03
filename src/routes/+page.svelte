@@ -202,8 +202,8 @@
 
 	.linear-wipe {
 		--bg-size: 400%;
-		--color-one: hsl(350, 47%, 40%);
-		--color-two: hsl(27, 100%, 56%);
+		--color-one: rgb(150, 54, 70);
+		--color-two: rgb(255, 132, 31);
 		background: linear-gradient(90deg, var(--color-one), var(--color-two), var(--color-one)) 0 0 /
 			var(--bg-size) 100%;
 		color: transparent;
