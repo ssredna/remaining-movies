@@ -147,7 +147,7 @@ export const actions = {
 	vote: async ({ fetch, request }) => {
 		const voteFormData = await request.formData();
 
-		fetch(`${VITE_SUPABASE_URL}/rest/v1/rpc/vote`, {
+		await fetch(`${VITE_SUPABASE_URL}/rest/v1/rpc/vote`, {
 			method: 'POST',
 			headers: {
 				apikey: VITE_SUPABASE_ANON_KEY,

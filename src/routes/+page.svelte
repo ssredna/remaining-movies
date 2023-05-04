@@ -18,7 +18,7 @@
 <div class="container">
 	<section class="hero">
 		<h1 class="linear-wipe">{data.remainingMovies}</h1>
-		<p>filmer igjen til jeg har sett 1000</p>
+		<p>{data.remainingMovies > 1 ? 'filmer' : 'film'} igjen til jeg har sett 1000</p>
 	</section>
 
 	<section class="history">
@@ -57,7 +57,12 @@
 							</object>
 						</div>
 						<div class="suggestion-item-text">
-							{@html suggestedMovie.title}
+							<span class="suggestion-item-title">{@html suggestedMovie.title}</span>
+							<br />
+							<span class="suggestion-item-votes"
+								>{@html suggestedMovie.votes}
+								{suggestedMovie.votes > 1 ? 'stemmer' : 'stemme'}</span
+							>
 						</div>
 						<button aria-label="Stem på film" class="vote-button" />
 					</form>
@@ -205,6 +210,11 @@
 			margin-top: 2rem;
 		}
 
+		.suggestion-item-title {
+			font-size: 1.1rem;
+			margin: 0;
+		}
+
 		.poster {
 			height: 350px;
 		}
@@ -229,10 +239,19 @@
 
 	.suggestion-item-text {
 		color: rgb(150, 54, 70);
-		font-size: 1.2rem;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.suggestion-item-title {
+		font-size: 1rem;
+		margin: 0;
+	}
+
+	.suggestion-item-votes {
+		font-size: 0.8rem;
+		margin: 0;
 	}
 
 	.vote-button {
