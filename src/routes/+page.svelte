@@ -59,7 +59,7 @@
 						<div class="suggestion-item-text">
 							{@html suggestedMovie.title}
 						</div>
-						<button aria-label="Stem på film" />
+						<button aria-label="Stem på film" class="vote-button" />
 					</form>
 				{/each}
 			</div>
@@ -213,7 +213,8 @@
 	.suggestion-item {
 		background-color: rgb(246, 234, 121);
 		box-sizing: border-box;
-		display: flex;
+		display: grid;
+		grid-template-columns: auto 1fr 2rem;
 		gap: 0.5rem;
 		align-items: center;
 		padding: 0.3rem;
@@ -232,6 +233,21 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.vote-button {
+		border: none;
+		background: url(../lib/images/vote-Icon.svg) no-repeat;
+		background-size: contain;
+		height: 1.5rem;
+		aspect-ratio: 1;
+		cursor: pointer;
+		opacity: 0.5;
+		transition: opacity 0.2s;
+	}
+
+	.vote-button:hover {
+		opacity: 1;
 	}
 
 	footer {

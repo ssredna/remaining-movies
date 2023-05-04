@@ -93,7 +93,7 @@
 					<img src={noImage} alt="Name" class="suggestion-poster" />
 				</object>
 			</div>
-			<div class="suggestion-item-text">Jeg allerede sett {@html alreadyWatched.title}</div>
+			<div class="suggestion-item-text">Jeg har allerede sett {@html alreadyWatched.title}</div>
 		{/if}
 	</div>
 
