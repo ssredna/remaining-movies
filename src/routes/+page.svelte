@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import noImage from '$lib/images/no-image.png';
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
@@ -7,6 +8,19 @@
 
 	export let data;
 	export let form;
+
+	function handleVoteClick(id: number) {
+		if (browser) {
+			localStorage.setItem(String(id), '1');
+		}
+	}
+
+	function haveVotedForMovie(id: number) {
+		if (browser && localStorage.getItem(String(id))) {
+			return true;
+		}
+		return false;
+	}
 
 	$: suggestedMovieIds = data.suggestedMovies.map((movie) => movie.id);
 </script>
@@ -64,7 +78,12 @@
 								{suggestedMovie.votes > 1 ? 'stemmer' : 'stemme'}</span
 							>
 						</div>
-						<button aria-label="Stem på film" class="vote-button" />
+						<button
+							aria-label="Stem på film"
+							class="vote-button"
+							on:click={() => handleVoteClick(suggestedMovie.id)}
+							disabled={haveVotedForMovie(suggestedMovie.id)}
+						/>
 					</form>
 				{/each}
 			</div>
@@ -163,6 +182,27 @@
 		overflow-y: auto;
 	}
 
+	.vote-button {
+		border: none;
+		background: url(../lib/images/vote-Icon.svg) no-repeat 50% 50%;
+		background-size: 1.2rem 1.2rem;
+		height: 1.8rem;
+		aspect-ratio: 1;
+		cursor: pointer;
+		opacity: 0.85;
+		transition: opacity 0.2s;
+		background-color: rgb(30, 56, 136);
+		border-radius: 4px;
+	}
+
+	.vote-button:hover {
+		opacity: 1;
+	}
+
+	.vote-button:disabled {
+		opacity: 0.3;
+	}
+
 	@media only screen and (min-width: 900px) {
 		.container {
 			display: grid;
@@ -218,6 +258,10 @@
 		.poster {
 			height: 350px;
 		}
+
+		.vote-button {
+			opacity: 0.7;
+		}
 	}
 
 	.suggestion-item {
@@ -252,21 +296,6 @@
 	.suggestion-item-votes {
 		font-size: 0.8rem;
 		margin: 0;
-	}
-
-	.vote-button {
-		border: none;
-		background: url(../lib/images/vote-Icon.svg) no-repeat;
-		background-size: contain;
-		height: 1.5rem;
-		aspect-ratio: 1;
-		cursor: pointer;
-		opacity: 0.5;
-		transition: opacity 0.2s;
-	}
-
-	.vote-button:hover {
-		opacity: 1;
 	}
 
 	footer {
