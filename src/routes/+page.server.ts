@@ -4,6 +4,7 @@ import {
 	VITE_TMDB_CLIENT_ID,
 	VITE_TRAKT_CLIENT_ID
 } from '$env/static/private';
+import { fail } from '@sveltejs/kit';
 
 interface history {
 	movie: {
@@ -105,13 +106,31 @@ export const actions = {
 	suggest: async ({ fetch, request }) => {
 		const suggestionFormData = await request.formData();
 
-		const requestObject = {
-			id: suggestionFormData.get('id'),
-			title: suggestionFormData.get('title'),
-			poster_path: suggestionFormData.get('poster_path')
+		const requestObject: movie = {
+			id: Number(suggestionFormData.get('id')),
+			title: String(suggestionFormData.get('title')),
+			poster_path: String(suggestionFormData.get('poster_path'))
 		};
 
-		fetch(`${VITE_SUPABASE_URL}/rest/v1/suggested-movies`, {
+		const watchedHistory: history[] = await fetch(
+			'https://api.trakt.tv/users/ssredna/watched/movies',
+			{
+				headers: {
+					'Content-Type': 'application/json',
+					'trakt-api-version': '2',
+					'trakt-api-key': VITE_TRAKT_CLIENT_ID
+				}
+			}
+		).then((res) => res.json());
+		const watchedIds = watchedHistory.map((historyItem) => historyItem.movie.ids.tmdb);
+
+		if (watchedIds.includes(requestObject.id)) {
+			return fail(409, {
+				alreadyWatched: { ...requestObject }
+			});
+		}
+
+		await fetch(`${VITE_SUPABASE_URL}/rest/v1/suggested-movies`, {
 			method: 'POST',
 			headers: {
 				apikey: VITE_SUPABASE_ANON_KEY,

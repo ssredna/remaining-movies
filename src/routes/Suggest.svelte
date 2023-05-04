@@ -6,6 +6,7 @@
 	export let searchResults: movie[] | undefined;
 	export let queriedString: string | undefined;
 	export let suggestedMovieIds: number[];
+	export let alreadyWatched: movie | undefined;
 
 	let isFocused = true;
 	let selectedMovie: movie | undefined;
@@ -30,6 +31,7 @@
 			name="q"
 			placeholder="Søk etter film"
 			value={queriedString ? queriedString : ''}
+			required
 			autofocus={!!searchResults}
 			autocomplete="off"
 			on:focusout={handleDropdownFocusLoss}
@@ -80,6 +82,18 @@
 			<div class="suggestion-item-text">
 				{@html selectedMovie.title}
 			</div>
+		{:else if alreadyWatched}
+			<div>
+				<object
+					data={mediumPosterUrlFromPosterPath(alreadyWatched.poster_path)}
+					type="image/jpeg"
+					class="suggestion-poster"
+					title={alreadyWatched.title}
+				>
+					<img src={noImage} alt="Name" class="suggestion-poster" />
+				</object>
+			</div>
+			<div class="suggestion-item-text">Jeg allerede sett {@html alreadyWatched.title}</div>
 		{/if}
 	</div>
 

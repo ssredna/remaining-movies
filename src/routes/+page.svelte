@@ -38,6 +38,7 @@
 			searchResults={form?.searchResults}
 			queriedString={form?.queryString}
 			{suggestedMovieIds}
+			alreadyWatched={form?.alreadyWatched}
 		/>
 		<div class="suggested-movies">
 			<h2>Foreslåtte filmer:</h2>
