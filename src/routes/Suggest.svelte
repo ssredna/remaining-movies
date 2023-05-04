@@ -4,6 +4,7 @@
 	import type { movie } from './+page.server';
 
 	export let searchResults: movie[] | undefined;
+	export let queriedString: string | undefined;
 	export let suggestedMovieIds: number[];
 
 	let isFocused = true;
@@ -23,10 +24,12 @@
 
 <div class="container">
 	<form method="POST" action="?/search">
-		<h2>Foreslå film nr 1000</h2>
+		<h2>Foreslå film nr 1000:</h2>
 		<input
 			type="search"
 			name="q"
+			placeholder="Søk etter film"
+			value={queriedString ? queriedString : ''}
 			autofocus={!!searchResults}
 			autocomplete="off"
 			on:focusout={handleDropdownFocusLoss}
@@ -109,7 +112,7 @@
 	input[type='search'] {
 		padding: 12px 20px;
 		border-radius: 8px;
-		background: rgb(225, 241, 244);
+		background: rgb(240, 248, 249);
 		border-width: 2px;
 		border: 2px solid rgb(135, 199, 212);
 		font-size: 1rem;
@@ -122,7 +125,7 @@
 	.search-results {
 		position: absolute;
 		width: 100%;
-		max-height: 30rem;
+		max-height: 20rem;
 		padding: 2px;
 		border-radius: 5px;
 		box-sizing: border-box;
@@ -130,6 +133,12 @@
 		box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
 		visibility: hidden;
 		overflow-y: auto;
+	}
+
+	@media only screen and (min-width: 900px) {
+		.search-results {
+			max-height: 35rem;
+		}
 	}
 
 	.search-results.isFocused {
@@ -160,7 +169,6 @@
 	.suggestion-item {
 		background-color: rgb(255, 176, 112);
 		height: 150px;
-		max-width: 30rem;
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
@@ -179,9 +187,6 @@
 	.suggestion-item-text {
 		color: rgb(150, 54, 70);
 		font-size: 1.3rem;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 
 	.poster {

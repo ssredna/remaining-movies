@@ -97,7 +97,10 @@ export const actions = {
 			.then((res) => res.json())
 			.then((res) => res.results);
 
-		return { searchResults: movies };
+		return {
+			searchResults: movies,
+			queryString
+		};
 	},
 	suggest: async ({ fetch, request }) => {
 		const suggestionFormData = await request.formData();
