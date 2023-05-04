@@ -44,7 +44,8 @@
 			<h2>Foreslåtte filmer:</h2>
 			<div class="suggestion-items">
 				{#each data.suggestedMovies as suggestedMovie}
-					<div class="suggestion-item">
+					<form method="post" action="?/vote" class="suggestion-item">
+						<input type="hidden" name="id" value={suggestedMovie.id} />
 						<div>
 							<object
 								data={smallPosterUrlFromPosterPath(suggestedMovie.poster_path)}
@@ -58,7 +59,8 @@
 						<div class="suggestion-item-text">
 							{@html suggestedMovie.title}
 						</div>
-					</div>
+						<button aria-label="Stem på film" />
+					</form>
 				{/each}
 			</div>
 		</div>

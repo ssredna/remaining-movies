@@ -78,6 +78,7 @@ export const load = async ({ fetch }) => {
 	const remainingMovies = 1000 - stats.movies.plays;
 
 	const suggestedMovies = await suggestedMoviesPromise;
+	suggestedMovies.sort((movieA, movieB) => movieB.votes - movieA.votes);
 
 	return {
 		remainingMovies,
@@ -142,5 +143,18 @@ export const actions = {
 		});
 
 		return { requestObject };
+	},
+	vote: async ({ fetch, request }) => {
+		const voteFormData = await request.formData();
+
+		fetch(`${VITE_SUPABASE_URL}/rest/v1/rpc/vote`, {
+			method: 'POST',
+			headers: {
+				apikey: VITE_SUPABASE_ANON_KEY,
+				Authorization: `Bearer ${VITE_SUPABASE_ANON_KEY}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ tmdb_id: voteFormData.get('id') })
+		});
 	}
 };
