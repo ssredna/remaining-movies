@@ -2,6 +2,7 @@
 	import noImage from '$lib/images/no-image.png';
 	import { mediumPosterUrlFromPosterPath, smallPosterUrlFromPosterPath } from '$lib/utils';
 	import type { movie } from './+page.server';
+	import SuggestButton from './SuggestButton.svelte';
 
 	export let searchResults: movie[] | undefined;
 	export let queriedString: string | undefined;
@@ -102,8 +103,7 @@
 		<input type="hidden" name="id" value={selectedMovie?.id} />
 		<input type="hidden" name="title" value={selectedMovie?.title} />
 		<input type="hidden" name="poster_path" value={selectedMovie?.poster_path} />
-		<input
-			type="submit"
+		<SuggestButton
 			value={isSelectedMovieSuggested ? 'Den er allerede foreslått' : 'Foreslå film'}
 			disabled={!selectedMovie || isSelectedMovieSuggested}
 		/>
@@ -214,41 +214,5 @@
 		height: 150px;
 		border-radius: 5px;
 		display: block;
-	}
-
-	input[type='submit'] {
-		display: block;
-		padding: 1rem 0;
-		text-align: center;
-		transition: 0.5s;
-		color: white;
-		font-weight: 700;
-		font-size: 1rem;
-		border-radius: 8px;
-		border: 0px;
-		box-shadow: 0px 0px 14px -7px #f09819;
-		background-size: 200% auto;
-		background-image: linear-gradient(
-			45deg,
-			rgb(150, 54, 70) 0%,
-			rgb(255, 132, 31) 51%,
-			rgb(150, 54, 70) 100%
-		);
-		cursor: pointer;
-	}
-
-	input[type='submit']:hover {
-		background-position: right center;
-	}
-
-	input[type='submit']:active {
-		transform: scale(0.95);
-	}
-
-	input[type='submit']:disabled {
-		background-image: none;
-		color: rgb(150, 54, 70);
-		font-weight: normal;
-		cursor: auto;
 	}
 </style>
