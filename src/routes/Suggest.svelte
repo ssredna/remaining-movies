@@ -11,10 +11,16 @@
 
 	let isFocused = true;
 	let selectedMovie: movie | undefined;
+	let tap: boolean = false;
 
 	$: isSelectedMovieSuggested = selectedMovie
 		? suggestedMovieIds.includes(selectedMovie.id)
 		: false;
+
+	function handleSelectMovie(movie: movie) {
+		selectedMovie = movie;
+		isFocused = false;
+	}
 
 	function handleDropdownFocusLoss({ relatedTarget }: FocusEvent) {
 		if (relatedTarget instanceof HTMLElement && relatedTarget.classList.contains('result-item'))
@@ -46,9 +52,14 @@
 			{#each searchResults as movie}
 				<button
 					class="result-item"
-					on:click={() => {
-						selectedMovie = movie;
-						isFocused = false;
+					on:click={() => handleSelectMovie(movie)}
+					on:touchstart={() => (tap = true)}
+					on:touchmove={() => (tap = false)}
+					on:touchend={() => {
+						if (tap) {
+							handleSelectMovie(movie);
+						}
+						tap = false;
 					}}
 				>
 					<div>
@@ -163,6 +174,7 @@
 
 	.result-item {
 		background-color: rgb(165, 212, 223);
+		z-index: 2;
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
