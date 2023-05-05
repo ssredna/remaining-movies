@@ -9,6 +9,8 @@
 	export let data;
 	export let form;
 
+	$: suggestedMovieIds = data.suggestedMovies.map((movie) => movie.id);
+
 	function handleVoteClick(id: number) {
 		if (browser) {
 			localStorage.setItem(String(id), '1');
@@ -21,8 +23,6 @@
 		}
 		return false;
 	}
-
-	$: suggestedMovieIds = data.suggestedMovies.map((movie) => movie.id);
 </script>
 
 <svelte:head>
@@ -71,12 +71,12 @@
 							</object>
 						</div>
 						<div class="suggestion-item-text">
-							<span class="suggestion-item-title">{@html suggestedMovie.title}</span>
+							<span class="suggestion-item-title">{suggestedMovie.title}</span>
 							<br />
-							<span class="suggestion-item-votes"
-								>{@html suggestedMovie.votes}
-								{suggestedMovie.votes > 1 ? 'stemmer' : 'stemme'}</span
-							>
+							<span class="suggestion-item-votes">
+								{suggestedMovie.votes}
+								{suggestedMovie.votes > 1 ? 'stemmer' : 'stemme'}
+							</span>
 						</div>
 						<button
 							aria-label="Stem på film"

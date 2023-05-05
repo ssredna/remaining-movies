@@ -24,11 +24,12 @@
 </script>
 
 <div class="container">
-	<form method="POST" action="?/search">
+	<form method="POST" action="?/search" role="search">
 		<h2>Foreslå film nr 1000:</h2>
 		<input
 			type="search"
 			name="q"
+			aria-label="Søk opp film du vil foreslå"
 			placeholder="Søk etter film"
 			value={queriedString ? queriedString : ''}
 			required
@@ -60,7 +61,7 @@
 						</object>
 					</div>
 					<div class="result-item-text">
-						{@html movie.title}
+						{movie.title}
 					</div>
 				</button>
 			{/each}
@@ -80,7 +81,7 @@
 				</object>
 			</div>
 			<div class="suggestion-item-text">
-				{@html selectedMovie.title}
+				{selectedMovie.title}
 			</div>
 		{:else if alreadyWatched}
 			<div>
@@ -93,7 +94,7 @@
 					<img src={noImage} alt="Name" class="suggestion-poster" />
 				</object>
 			</div>
-			<div class="suggestion-item-text">Jeg har allerede sett {@html alreadyWatched.title}</div>
+			<div class="suggestion-item-text">Jeg har allerede sett {alreadyWatched.title}</div>
 		{/if}
 	</div>
 
@@ -138,6 +139,7 @@
 
 	.search-results {
 		position: absolute;
+		z-index: 1;
 		width: 100%;
 		max-height: 20rem;
 		padding: 2px;
