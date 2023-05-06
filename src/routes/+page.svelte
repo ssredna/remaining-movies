@@ -4,6 +4,7 @@
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import { smallPosterUrlFromPosterPath } from '$lib/utils';
+	import AnimatedHeader from './AnimatedHeader.svelte';
 	import Suggest from './Suggest.svelte';
 
 	export let data;
@@ -31,7 +32,7 @@
 
 <div class="container">
 	<section class="hero">
-		<h1 class="linear-wipe">{data.remainingMovies}</h1>
+		<AnimatedHeader>{data.remainingMovies}</AnimatedHeader>
 		<p>{data.remainingMovies > 1 ? 'filmer' : 'film'} igjen til jeg har sett 1000</p>
 	</section>
 
@@ -107,12 +108,6 @@
 		justify-items: center;
 	}
 
-	h1 {
-		color: rgb(150, 54, 70);
-		font-size: 20rem;
-		margin: 0;
-	}
-
 	h2 {
 		color: rgb(150, 54, 70);
 		font-size: 1.5rem;
@@ -131,8 +126,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-top: 14vh;
-		padding-bottom: 22vh;
+		padding-top: 10vh;
+		padding-bottom: 26vh;
 	}
 
 	.history {
@@ -236,10 +231,6 @@
 			width: 85%;
 		}
 
-		h1 {
-			font-size: 25rem;
-		}
-
 		.latest-movies-container {
 			display: flex;
 			gap: 2rem;
@@ -308,24 +299,6 @@
 
 	.logo {
 		width: 3rem;
-	}
-
-	@keyframes move-bg {
-		to {
-			background-position: var(--bg-size) 0;
-		}
-	}
-
-	.linear-wipe {
-		--bg-size: 400%;
-		--color-one: rgb(150, 54, 70);
-		--color-two: rgb(255, 132, 31);
-		background: linear-gradient(90deg, var(--color-one), var(--color-two), var(--color-one)) 0 0 /
-			var(--bg-size) 100%;
-		color: transparent;
-		-webkit-background-clip: text;
-		background-clip: text;
-		animation: move-bg 8s infinite linear;
 	}
 
 	:global(body) {
