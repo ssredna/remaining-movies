@@ -1,7 +1,6 @@
 <script lang="ts">
-	import noImage from '$lib/images/no-image.png';
-	import { mediumPosterUrlFromPosterPath, smallPosterUrlFromPosterPath } from '$lib/utils';
 	import type { movie } from './+page.server';
+	import PosterImage from './PosterImage.svelte';
 	import SuggestButton from './SuggestButton.svelte';
 
 	export let searchResults: movie[] | undefined;
@@ -62,16 +61,7 @@
 						tap = false;
 					}}
 				>
-					<div>
-						<object
-							data={smallPosterUrlFromPosterPath(movie.poster_path)}
-							type="image/jpeg"
-							class="poster"
-							title={movie.title}
-						>
-							<img src={noImage} alt="Name" class="poster" />
-						</object>
-					</div>
+					<PosterImage {...movie} size="small" />
 					<div class="result-item-text">
 						{movie.title}
 					</div>
@@ -82,30 +72,12 @@
 
 	<div class="suggestion-item">
 		{#if selectedMovie}
-			<div>
-				<object
-					data={mediumPosterUrlFromPosterPath(selectedMovie.poster_path)}
-					type="image/jpeg"
-					class="suggestion-poster"
-					title={selectedMovie.title}
-				>
-					<img src={noImage} alt="Name" class="suggestion-poster" />
-				</object>
-			</div>
+			<PosterImage {...selectedMovie} size="medium" />
 			<div class="suggestion-item-text">
 				{selectedMovie.title}
 			</div>
 		{:else if alreadyWatched}
-			<div>
-				<object
-					data={mediumPosterUrlFromPosterPath(alreadyWatched.poster_path)}
-					type="image/jpeg"
-					class="suggestion-poster"
-					title={alreadyWatched.title}
-				>
-					<img src={noImage} alt="Name" class="suggestion-poster" />
-				</object>
-			</div>
+			<PosterImage {...alreadyWatched} size="medium" />
 			<div class="suggestion-item-text">Jeg har allerede sett {alreadyWatched.title}</div>
 		{/if}
 	</div>
@@ -215,16 +187,5 @@
 	.suggestion-item-text {
 		color: rgb(150, 54, 70);
 		font-size: 1.3rem;
-	}
-
-	.poster {
-		height: 75px;
-		border-radius: 3px;
-	}
-
-	.suggestion-poster {
-		height: 150px;
-		border-radius: 5px;
-		display: block;
 	}
 </style>

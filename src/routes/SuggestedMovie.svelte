@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import noImage from '$lib/images/no-image.png';
-	import { smallPosterUrlFromPosterPath } from '$lib/utils';
 	import type { suggestedMovie } from './+page.server';
+	import PosterImage from './PosterImage.svelte';
 
 	export let movie: suggestedMovie;
 
@@ -22,16 +21,7 @@
 
 <form method="post" action="?/vote" class="suggestion-item">
 	<input type="hidden" name="id" value={movie.id} />
-	<div>
-		<object
-			data={smallPosterUrlFromPosterPath(movie.poster_path)}
-			type="image/jpeg"
-			class="suggestion-poster"
-			title={movie.title}
-		>
-			<img src={noImage} alt="Name" class="suggestion-poster" />
-		</object>
-	</div>
+	<PosterImage {...movie} size="small" />
 	<div class="suggestion-item-text">
 		<span class="suggestion-item-title">{movie.title}</span>
 		<br />
@@ -59,11 +49,6 @@
 		padding: 0.3rem;
 		border: 0;
 		width: 100%;
-	}
-
-	.suggestion-poster {
-		height: 75px;
-		border-radius: 3px;
 	}
 
 	.suggestion-item-text {
