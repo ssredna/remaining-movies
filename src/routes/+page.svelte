@@ -1,29 +1,14 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import noImage from '$lib/images/no-image.png';
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
-	import { smallPosterUrlFromPosterPath } from '$lib/utils';
 	import AnimatedHeader from './AnimatedHeader.svelte';
 	import Suggest from './Suggest.svelte';
+	import SuggestedMovie from './SuggestedMovie.svelte';
 
 	export let data;
 	export let form;
 
 	$: suggestedMovieIds = data.suggestedMovies.map((movie) => movie.id);
-
-	function handleVoteClick(id: number) {
-		if (browser) {
-			localStorage.setItem(String(id), '1');
-		}
-	}
-
-	function haveVotedForMovie(id: number) {
-		if (browser && localStorage.getItem(String(id))) {
-			return true;
-		}
-		return false;
-	}
 </script>
 
 <svelte:head>
@@ -59,33 +44,7 @@
 			<h2>Foreslåtte filmer:</h2>
 			<div class="suggestion-items">
 				{#each data.suggestedMovies as suggestedMovie}
-					<form method="post" action="?/vote" class="suggestion-item">
-						<input type="hidden" name="id" value={suggestedMovie.id} />
-						<div>
-							<object
-								data={smallPosterUrlFromPosterPath(suggestedMovie.poster_path)}
-								type="image/jpeg"
-								class="suggestion-poster"
-								title={suggestedMovie.title}
-							>
-								<img src={noImage} alt="Name" class="suggestion-poster" />
-							</object>
-						</div>
-						<div class="suggestion-item-text">
-							<span class="suggestion-item-title">{suggestedMovie.title}</span>
-							<br />
-							<span class="suggestion-item-votes">
-								{suggestedMovie.votes}
-								{suggestedMovie.votes > 1 ? 'stemmer' : 'stemme'}
-							</span>
-						</div>
-						<button
-							aria-label="Stem på film"
-							class="vote-button"
-							on:click={() => handleVoteClick(suggestedMovie.id)}
-							disabled={haveVotedForMovie(suggestedMovie.id)}
-						/>
-					</form>
+					<SuggestedMovie movie={suggestedMovie} />
 				{/each}
 			</div>
 		</div>
@@ -173,29 +132,8 @@
 		background-color: rgb(245, 230, 99);
 		border-radius: 8px;
 		padding: 0.2rem;
-		max-height: 33rem;
+		max-height: 26rem;
 		overflow-y: auto;
-	}
-
-	.vote-button {
-		border: none;
-		background: url(../lib/images/vote-Icon.svg) no-repeat 50% 50%;
-		background-size: 1.2rem 1.2rem;
-		height: 1.8rem;
-		aspect-ratio: 1;
-		cursor: pointer;
-		opacity: 0.85;
-		transition: opacity 0.2s;
-		background-color: rgb(30, 56, 136);
-		border-radius: 4px;
-	}
-
-	.vote-button:hover {
-		opacity: 1;
-	}
-
-	.vote-button:disabled {
-		opacity: 0.3;
 	}
 
 	@media only screen and (min-width: 900px) {
@@ -241,52 +179,13 @@
 			margin-top: 2rem;
 		}
 
-		.suggestion-item-title {
-			font-size: 1.1rem;
-			margin: 0;
+		.suggestion-items {
+			max-height: 33rem;
 		}
 
 		.poster {
 			height: 350px;
 		}
-
-		.vote-button {
-			opacity: 0.7;
-		}
-	}
-
-	.suggestion-item {
-		background-color: rgb(246, 234, 121);
-		box-sizing: border-box;
-		display: grid;
-		grid-template-columns: auto 1fr 2rem;
-		gap: 0.5rem;
-		align-items: center;
-		padding: 0.3rem;
-		border: 0;
-		width: 100%;
-	}
-
-	.suggestion-poster {
-		height: 75px;
-		border-radius: 3px;
-	}
-
-	.suggestion-item-text {
-		color: rgb(150, 54, 70);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.suggestion-item-title {
-		font-size: 1rem;
-		margin: 0;
-	}
-
-	.suggestion-item-votes {
-		font-size: 0.8rem;
-		margin: 0;
 	}
 
 	footer {

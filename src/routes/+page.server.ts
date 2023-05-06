@@ -27,7 +27,7 @@ export interface movie {
 	id: number;
 }
 
-type suggestedMovie = movie & {
+export type suggestedMovie = movie & {
 	votes: number;
 };
 

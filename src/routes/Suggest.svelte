@@ -38,7 +38,7 @@
 			name="q"
 			aria-label="Søk opp film du vil foreslå"
 			placeholder="Søk etter film"
-			value={queriedString ? queriedString : ''}
+			value={queriedString ?? ''}
 			required
 			autofocus={!!searchResults}
 			autocomplete="off"
