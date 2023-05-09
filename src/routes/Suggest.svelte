@@ -8,26 +8,15 @@
 	export let suggestedMovieIds: number[];
 	export let alreadyWatched: movie | undefined;
 
-	let isFocused = true;
+	let dropdownOpen = true;
 	let selectedMovie: movie | undefined;
-	let tap: boolean = false;
 
 	$: isSelectedMovieSuggested = selectedMovie
 		? suggestedMovieIds.includes(selectedMovie.id)
 		: false;
-
-	function handleSelectMovie(movie: movie) {
-		selectedMovie = movie;
-		isFocused = false;
-	}
-
-	function handleDropdownFocusLoss({ relatedTarget }: FocusEvent) {
-		if (relatedTarget instanceof HTMLElement && relatedTarget.classList.contains('result-item'))
-			return;
-
-		isFocused = false;
-	}
 </script>
+
+<svelte:body on:click={() => (dropdownOpen = false)} />
 
 <div class="container">
 	<form method="POST" action="?/search" role="search">
@@ -39,28 +28,17 @@
 			placeholder="Søk etter film"
 			value={queriedString ?? ''}
 			required
-			autofocus={!!searchResults}
 			autocomplete="off"
-			on:focusout={handleDropdownFocusLoss}
-			on:focusin={() => (isFocused = true)}
+			on:click|stopPropagation={() => {
+				dropdownOpen = true;
+			}}
 		/>
 	</form>
 
 	{#if searchResults}
-		<div class="search-results" class:isFocused>
+		<div class="search-results" class:dropdownOpen>
 			{#each searchResults as movie}
-				<button
-					class="result-item"
-					on:click={() => handleSelectMovie(movie)}
-					on:touchstart={() => (tap = true)}
-					on:touchmove={() => (tap = false)}
-					on:touchend={() => {
-						if (tap) {
-							handleSelectMovie(movie);
-						}
-						tap = false;
-					}}
-				>
+				<button class="result-item" on:click={() => (selectedMovie = movie)}>
 					<PosterImage {...movie} size="small" />
 					<div class="result-item-text">
 						{movie.title}
@@ -140,7 +118,7 @@
 		}
 	}
 
-	.search-results.isFocused {
+	.search-results.dropdownOpen {
 		visibility: visible;
 	}
 
