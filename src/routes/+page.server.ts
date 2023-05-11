@@ -27,9 +27,9 @@ export interface movie {
 	id: number;
 }
 
-export type suggestedMovie = movie & {
+export interface suggestedMovie extends movie {
 	votes: number;
-};
+}
 
 export const load = async ({ fetch }) => {
 	const statsPromise: Promise<stats> = fetch('https://api.trakt.tv/users/ssredna/stats', {
