@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import AnimatedHeader from './AnimatedHeader.svelte';
@@ -7,6 +8,10 @@
 
 	export let data;
 	export let form;
+
+	if (form?.successfullySuggestedMovieId && browser) {
+		localStorage.setItem(String(form.successfullySuggestedMovieId), '1');
+	}
 
 	$: suggestedMovieIds = data.suggestedMovies.map((movie) => movie.id);
 </script>

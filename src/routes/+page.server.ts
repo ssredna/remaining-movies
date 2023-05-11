@@ -142,7 +142,7 @@ export const actions = {
 			body: JSON.stringify(requestObject)
 		});
 
-		return { requestObject };
+		return { successfullySuggestedMovieId: requestObject.id };
 	},
 	vote: async ({ fetch, request }) => {
 		const voteFormData = await request.formData();
