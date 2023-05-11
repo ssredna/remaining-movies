@@ -37,14 +37,18 @@
 
 	{#if searchResults}
 		<div class="search-results" class:dropdownOpen>
-			{#each searchResults as movie}
-				<button class="result-item" on:click={() => (selectedMovie = movie)}>
-					<PosterImage {...movie} size="small" />
-					<div class="result-item-text">
-						{movie.title}
-					</div>
-				</button>
-			{/each}
+			{#if searchResults.length === 0}
+				<div class="no-result">Ingen søkeresultat</div>
+			{:else}
+				{#each searchResults as movie}
+					<button class="result-item" on:click={() => (selectedMovie = movie)}>
+						<PosterImage {...movie} size="small" />
+						<div class="result-item-text">
+							{movie.title}
+						</div>
+					</button>
+				{/each}
+			{/if}
 		</div>
 	{/if}
 
@@ -142,6 +146,10 @@
 	.result-item:focus {
 		outline: 2px solid rgb(71, 168, 189);
 		border-radius: 4px;
+	}
+
+	.no-result {
+		padding: 1rem;
 	}
 
 	.suggestion-item {
