@@ -20,7 +20,7 @@
 
 <div class="container">
 	<form method="POST" action="?/search" role="search">
-		<h2>Foreslå film nr 1000:</h2>
+		<h2>Foreslå filmer:</h2>
 		<input
 			type="search"
 			name="q"

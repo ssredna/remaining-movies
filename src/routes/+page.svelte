@@ -21,10 +21,18 @@
 </svelte:head>
 
 <div class="container">
-	<section class="hero">
-		<AnimatedHeader>{data.remainingMovies}</AnimatedHeader>
-		<p>{data.remainingMovies > 1 ? 'filmer' : 'film'} igjen til jeg har sett 1000</p>
-	</section>
+	{#if data.remainingMovies === 0}
+		<section class="zero-hero">
+			<p>jeg har sett</p>
+			<AnimatedHeader big>1000</AnimatedHeader>
+			<p>filmer</p>
+		</section>
+	{:else}
+		<section class="hero">
+			<AnimatedHeader>{data.remainingMovies}</AnimatedHeader>
+			<p>{data.remainingMovies === 1 ? 'film' : 'filmer'} igjen til jeg har sett 1000</p>
+		</section>
+	{/if}
 
 	<section class="history">
 		<h2>De siste filmene jeg har sett:</h2>
@@ -93,6 +101,15 @@
 		padding-top: 10vh;
 		padding-bottom: 26vh;
 	}
+	
+	.zero-hero {
+		grid-area: hero;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-top: 14vh;
+		padding-bottom: 26vh;
+	}
 
 	.history {
 		grid-area: history;
@@ -155,9 +172,18 @@
 			padding-top: 3rem;
 			padding-bottom: 0rem;
 		}
+		
+		.zero-hero {
+			padding-top: 8rem;
+			padding-bottom: 5rem;
+		}
 
 		.hero > p {
 			margin-top: -3rem;
+		}
+		
+		.zero-hero > p {
+			margin: -3rem 0;
 		}
 
 		.history {
