@@ -1,25 +1,19 @@
-<script lang="ts">
-	export let big: boolean;
-</script>
-
-<h1 class="linear-wipe" class:big>
+<h1 class="linear-wipe">
 	<slot>??</slot>
 </h1>
 
 <style>
 	h1 {
 		color: rgb(150, 54, 70);
-		font-size: 20rem;
+		font-size: 9rem;
 		margin: 0;
-	}
-	
-	h1, big {
-		font-size: 9.5rem;
 	}
 
 	@media only screen and (min-width: 900px) {
 		h1 {
 			font-size: 25rem;
+			margin-top: -2rem;
+			margin-bottom: -7rem;
 		}
 	}
 

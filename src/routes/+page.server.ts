@@ -75,13 +75,13 @@ export const load = async ({ fetch }) => {
 	}));
 
 	const stats = await statsPromise;
-	const remainingMovies = 1000 - stats.movies.plays;
+	const numberOfWatchedMovies = stats.movies.plays;
 
 	const suggestedMovies = await suggestedMoviesPromise;
 	suggestedMovies.sort((movieA, movieB) => movieB.votes - movieA.votes);
 
 	return {
-		remainingMovies,
+		numberOfWatchedMovies,
 		latestMovies,
 		suggestedMovies
 	};
