@@ -1,5 +1,5 @@
 <h1 class="linear-wipe">
-	<slot>??</slot>
+	<slot>????</slot>
 </h1>
 
 <style>
@@ -7,13 +7,17 @@
 		color: rgb(150, 54, 70);
 		font-size: 9rem;
 		margin: 0;
+		letter-spacing: -0.4rem;
+		padding: 0 0.5rem; /* to avoid text clipping with negative letter spacing */
+		margin-top: -1.5rem;
+		margin-bottom: -2rem;
 	}
 
 	@media only screen and (min-width: 900px) {
 		h1 {
-			font-size: 25rem;
-			margin-top: -2rem;
-			margin-bottom: -7rem;
+			font-size: 22rem;
+			margin-top: -3rem;
+			margin-bottom: -3.8rem;
 		}
 	}
 

@@ -91,8 +91,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding-top: 18vh;
-		padding-bottom: 26vh;
+		padding-top: 22vh;
+		padding-bottom: 28vh;
 	}
 
 	.history {
