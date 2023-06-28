@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition';
 	import type { movie } from './+page.server';
 	import PosterImage from './PosterImage.svelte';
 	import SuggestButton from './SuggestButton.svelte';
@@ -35,8 +36,8 @@
 		/>
 	</form>
 
-	{#if searchResults}
-		<div class="search-results" class:dropdownOpen>
+	{#if searchResults && dropdownOpen}
+		<div class="search-results" transition:slide={{ duration: 250 }}>
 			{#if searchResults.length === 0}
 				<div class="no-result">Ingen søkeresultat</div>
 			{:else}
@@ -112,7 +113,6 @@
 		box-sizing: border-box;
 		background-color: rgb(165, 212, 223);
 		box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
-		visibility: hidden;
 		overflow-y: auto;
 	}
 
@@ -120,10 +120,6 @@
 		.search-results {
 			max-height: 35rem;
 		}
-	}
-
-	.search-results.dropdownOpen {
-		visibility: visible;
 	}
 
 	.result-item {
