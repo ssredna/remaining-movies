@@ -4,6 +4,7 @@
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import AnimatedHeader from './AnimatedHeader.svelte';
 	import Suggest from './Suggest.svelte';
+	import SuggestMovies from './SuggestMovies.svelte';
 	import SuggestedMovie from './SuggestedMovie.svelte';
 
 	export let data;
@@ -40,6 +41,7 @@
 	</section>
 
 	<section class="suggestions">
+		<SuggestMovies />
 		<Suggest
 			searchResults={form?.searchResults}
 			queriedString={form?.queryString}
