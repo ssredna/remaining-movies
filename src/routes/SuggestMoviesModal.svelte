@@ -1,23 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import PosterImage from './PosterImage.svelte';
 
 	let modal: HTMLDialogElement;
 
-	let searchString: string;
 	let results: any;
 	let debounceTimer: number;
+
+	$: console.log(results);
 
 	onMount(() => {
 		modal.showModal();
 	});
 
-	async function search() {
+	async function search(searchString: string) {
 		clearTimeout(debounceTimer);
 		debounceTimer = setTimeout(() => {
 			fetch(`/search?q=${searchString}`)
 				.then((res) => res.json())
 				.then((res) => (results = res));
-		}, 400);
+		}, 500);
 	}
 </script>
 
@@ -28,13 +30,25 @@
 			name="movie-search"
 			aria-label="Søk opp film du vil foreslå"
 			placeholder="Søk etter film"
-			bind:value={searchString}
-			on:input={search}
+			on:input={(event) => search(event.currentTarget.value)}
 		/>
 	</form>
 
 	{#if results}
-		results are in {results}
+		<div class="search-results">
+			{#if results.length === 0}
+				<div class="no-result">Ingen søkeresultat</div>
+			{:else}
+				{#each results as movie}
+					<button class="result-item">
+						<PosterImage {...movie} size="small" />
+						<div class="result-item-text">
+							{movie.title}
+						</div>
+					</button>
+				{/each}
+			{/if}
+		</div>
 	{/if}
 </dialog>
 
