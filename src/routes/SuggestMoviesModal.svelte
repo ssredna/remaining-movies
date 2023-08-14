@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import PosterImage from './PosterImage.svelte';
+	import { searchResults } from '../stores/searchResults';
 
 	let modal: HTMLDialogElement;
 
-	let results: any;
 	let debounceTimer: number;
 
 	onMount(() => {
@@ -16,7 +16,7 @@
 		debounceTimer = setTimeout(() => {
 			fetch(`/search?q=${searchString}`)
 				.then((res) => res.json())
-				.then((res) => (results = res));
+				.then((res) => searchResults.set(res));
 		}, 500);
 	}
 </script>
@@ -32,22 +32,20 @@
 		/>
 	</form>
 
-	{#if results}
-		<div class="search-results">
-			{#if results.length === 0}
-				<div class="no-result">Ingen søkeresultat</div>
-			{:else}
-				{#each results as movie}
-					<button class="result-item">
-						<PosterImage {...movie} size="small" />
-						<div class="result-item-text">
-							{movie.title}
-						</div>
-					</button>
-				{/each}
-			{/if}
-		</div>
-	{/if}
+	<div class="search-results">
+		{#if $searchResults.length === 0}
+			<div class="no-result">Ingen søkeresultat</div>
+		{:else}
+			{#each $searchResults as movie}
+				<button class="result-item">
+					<PosterImage {...movie} size="small" />
+					<div class="result-item-text">
+						{movie.title}
+					</div>
+				</button>
+			{/each}
+		{/if}
+	</div>
 </dialog>
 
 <style>
