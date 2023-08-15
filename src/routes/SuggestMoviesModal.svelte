@@ -6,6 +6,7 @@
 	let modal: HTMLDialogElement;
 
 	let debounceTimer: number;
+	let searched = false;
 
 	onMount(() => {
 		modal.showModal();
@@ -13,10 +14,19 @@
 
 	async function search(searchString: string) {
 		clearTimeout(debounceTimer);
+
+		if (!searchString) {
+			searched = false;
+			return;
+		}
+
 		debounceTimer = setTimeout(() => {
 			fetch(`/search?q=${searchString}`)
 				.then((res) => res.json())
-				.then((res) => searchResults.set(res));
+				.then((res) => {
+					searched = true;
+					searchResults.set(res);
+				});
 		}, 500);
 	}
 </script>
@@ -32,30 +42,32 @@
 		/>
 	</form>
 
-	<div class="search-results">
-		{#if $searchResults.length === 0}
-			<div class="no-result">Ingen søkeresultat</div>
-		{:else}
+	{#if searched && $searchResults.length === 0}
+		<div class="no-result">Ingen søkeresultat</div>
+	{:else if $searchResults.length}
+		<div class="search-results">
 			{#each $searchResults as movie}
 				<button class="result-item">
 					<PosterImage {...movie} size="small" />
-					<div class="result-item-text">
+					<p class="result-item-text">
 						{movie.title}
-					</div>
+					</p>
 				</button>
 			{/each}
-		{/if}
-	</div>
+		</div>
+	{/if}
 </dialog>
 
 <style>
 	dialog {
 		margin-top: 4rem;
+		max-height: 80%;
 		width: calc(100vw - 10rem);
 		max-width: 56rem;
 		border: none;
 		border-radius: 0.3rem;
 		filter: drop-shadow(3px 5px 10px rgba(0, 0, 0, 0.5));
+		background-color: rgb(165, 212, 223);
 	}
 
 	dialog::backdrop {
@@ -70,12 +82,41 @@
 	input[type='text'] {
 		padding: 0.8rem 1.2rem;
 		border: 2px solid rgb(135, 199, 212);
+		margin: 1px;
 		border-radius: 4px;
 		font-size: 1rem;
-		width: calc(90%);
+		width: 100%;
 	}
 
 	input[type='text']:focus {
 		outline: 1px solid rgb(71, 168, 189);
+	}
+
+	.search-results {
+		display: grid;
+		margin-top: 0.8rem;
+		gap: 0.2rem;
+		padding: 2px;
+		max-height: 70vh;
+		overflow-y: auto;
+	}
+
+	.result-item {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
+		padding: 0.3rem;
+		border-radius: 5px;
+	}
+
+	.result-item:hover {
+		background-color: rgb(150, 205, 217);
+	}
+
+	.result-item-text {
+		font-size: medium;
 	}
 </style>
