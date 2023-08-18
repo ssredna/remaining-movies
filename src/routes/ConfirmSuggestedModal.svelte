@@ -13,8 +13,6 @@
 		res.json()
 	);
 
-	const dispatch = createEventDispatcher();
-
 	onMount(() => {
 		modal.showModal();
 	});
@@ -29,12 +27,7 @@
 	<div class="content">
 		{#if selectedMovieAlreadySuggested}
 			<p>Noen andre har allerede foreslått {suggestedMovie.title}.</p>
-			<button
-				on:click={() => {
-					modal.close();
-					dispatch('suggested');
-				}}>Skynd deg å se den da!</button
-			>
+			<button on:click={() => modal.close()}>Skynd deg å se den da!</button>
 		{:else}
 			{#await watched}
 				Sjekker om jeg har sett {suggestedMovie.title}...

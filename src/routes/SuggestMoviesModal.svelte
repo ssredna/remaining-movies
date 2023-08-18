@@ -75,11 +75,7 @@
 </dialog>
 
 {#if showConfirmModal}
-	<ConfirmSuggestedModal
-		{suggestedMovie}
-		on:close={() => (showConfirmModal = false)}
-		on:suggested={() => modal.close()}
-	/>
+	<ConfirmSuggestedModal {suggestedMovie} on:close={() => (showConfirmModal = false)} />
 {/if}
 
 <style>
