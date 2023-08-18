@@ -88,22 +88,6 @@ export const load = async ({ fetch }) => {
 };
 
 export const actions = {
-	search: async ({ fetch, request }) => {
-		const queryFormData = await request.formData();
-		const queryString = queryFormData.get('q') as string;
-		const url =
-			`https://api.themoviedb.org/3/search/movie?api_key=${VITE_TMDB_CLIENT_ID}&query=` +
-			encodeURIComponent(queryString);
-
-		const movies: movie[] = await fetch(url)
-			.then((res) => res.json())
-			.then((res) => res.results);
-
-		return {
-			searchResults: movies,
-			queryString
-		};
-	},
 	suggest: async ({ fetch, request }) => {
 		const suggestionFormData = await request.formData();
 

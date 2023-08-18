@@ -3,7 +3,7 @@
 	export let disabled = false;
 </script>
 
-<input type="submit" {value} {disabled} />
+<input type="submit" {value} {disabled} on:click />
 
 <style>
 	input {

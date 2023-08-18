@@ -59,7 +59,7 @@
 
 <style>
 	dialog {
-		width: 60%;
+		width: 50%;
 		border: none;
 		border-radius: 0.3rem;
 		background-color: rgb(165, 212, 223);

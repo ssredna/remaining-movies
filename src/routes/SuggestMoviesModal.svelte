@@ -4,7 +4,6 @@
 	import { searchResults } from '../stores/searchResults';
 	import ConfirmSuggestionModal from './confirmSuggestionModal.svelte';
 	import type { movie } from './+page.server';
-	import backIcon from '$lib/images/back-icon.svg';
 
 	let modal: HTMLDialogElement;
 
@@ -41,12 +40,14 @@
 	<button class="back-button" aria-label="Go back" on:click={() => modal.close()} />
 
 	<form>
+		<!-- svelte-ignore a11y-autofocus -->
 		<input
 			type="text"
 			name="movie-search"
 			aria-label="Søk opp film du vil foreslå"
 			placeholder="Søk etter film"
 			autocomplete="off"
+			autofocus
 			on:input={(event) => search(event.currentTarget.value)}
 		/>
 	</form>

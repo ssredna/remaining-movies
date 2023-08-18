@@ -3,7 +3,6 @@
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import AnimatedHeader from './AnimatedHeader.svelte';
-	import Suggest from './Suggest.svelte';
 	import SuggestMovies from './SuggestMovies.svelte';
 	import SuggestedMovie from './SuggestedMovie.svelte';
 
@@ -13,8 +12,6 @@
 	if (form?.successfullySuggestedMovieId && browser) {
 		localStorage.setItem(String(form.successfullySuggestedMovieId), '1');
 	}
-
-	$: suggestedMovieIds = data.suggestedMovies.map((movie) => movie.id);
 </script>
 
 <svelte:head>
@@ -42,12 +39,6 @@
 
 	<section class="suggestions">
 		<SuggestMovies />
-		<Suggest
-			searchResults={form?.searchResults}
-			queriedString={form?.queryString}
-			{suggestedMovieIds}
-			alreadyWatched={form?.alreadyWatched}
-		/>
 		<div class="suggested-movies">
 			<h2>Foreslåtte filmer:</h2>
 			<div class="suggestion-items">
