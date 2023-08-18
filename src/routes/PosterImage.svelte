@@ -10,6 +10,8 @@
 	export let poster_path: string;
 	export let title: string;
 
+	let image: HTMLImageElement;
+
 	$: posterUrl =
 		size === 'small'
 			? smallPosterUrlFromPosterPath(poster_path)
@@ -20,28 +22,23 @@
 			: undefined;
 </script>
 
-<object
-	data={posterUrl}
-	type="image/jpeg"
+<img
+	bind:this={image}
+	src={posterUrl}
+	alt={title}
 	class:small={size === 'small'}
 	class:medium={size === 'medium'}
 	class:large={size === 'large'}
-	{title}
->
-	<img
-		src={noImage}
-		alt={title}
-		class:small={size === 'small'}
-		class:medium={size === 'medium'}
-		class:large={size === 'large'}
-	/>
-</object>
+	on:error={() => {
+		image.src = noImage;
+	}}
+/>
 
 <style>
 	.small {
 		height: 75px;
+		max-width: 50px;
 		border-radius: 3px;
-		min-width: min-content;
 	}
 
 	.medium {
