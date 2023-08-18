@@ -6,7 +6,7 @@ import {
 } from '$env/static/private';
 import { fail } from '@sveltejs/kit';
 
-interface history {
+export interface history {
 	movie: {
 		title: string;
 		ids: {
