@@ -41,6 +41,7 @@
 	.small {
 		height: 75px;
 		border-radius: 3px;
+		min-width: min-content;
 	}
 
 	.medium {

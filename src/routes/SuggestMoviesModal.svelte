@@ -84,10 +84,9 @@
 
 <style>
 	dialog {
-		margin-top: 4rem;
-		max-height: 80%;
-		width: calc(100vw - 10rem);
-		max-width: 56rem;
+		margin-top: 1rem;
+		max-height: 90dvh;
+		width: calc(100vw - 4rem);
 		border: none;
 		border-radius: 0.3rem;
 		filter: drop-shadow(3px 5px 10px rgba(0, 0, 0, 0.5));
@@ -122,8 +121,21 @@
 		margin-top: 0.8rem;
 		gap: 0.2rem;
 		padding: 2px;
-		max-height: 70vh;
+		max-height: 70dvh;
 		overflow-y: auto;
+	}
+
+	@media only screen and (min-width: 900px) {
+		dialog {
+			margin-top: 4rem;
+			max-height: 80%;
+			width: calc(100vw - 10rem);
+			max-width: 56rem;
+		}
+
+		.search-results {
+			max-height: 70vh;
+		}
 	}
 
 	.result-item {
@@ -135,6 +147,7 @@
 		background-color: transparent;
 		padding: 0.3rem;
 		border-radius: 5px;
+		text-align: start;
 	}
 
 	.result-item:hover {
