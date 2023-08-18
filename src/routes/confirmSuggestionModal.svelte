@@ -59,7 +59,7 @@
 
 <style>
 	dialog {
-		width: 50%;
+		width: 80%;
 		border: none;
 		border-radius: 0.3rem;
 		background-color: rgb(165, 212, 223);
@@ -79,7 +79,17 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 3rem;
+		text-align: center;
+	}
+
+	@media only screen and (min-width: 900px) {
+		dialog {
+			width: 50%;
+		}
+
+		.content {
+			gap: 3rem;
+		}
 	}
 
 	.buttons {

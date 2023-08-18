@@ -51,8 +51,14 @@
 	}
 
 	.large {
-		height: 300px;
+		height: 175px;
 		border-radius: 10px;
 		display: block;
+	}
+
+	@media only screen and (min-width: 900px) {
+		.large {
+			height: 300px;
+		}
 	}
 </style>
