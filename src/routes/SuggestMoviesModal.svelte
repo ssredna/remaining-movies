@@ -4,6 +4,7 @@
 	import { searchResults } from '../stores/searchResults';
 	import ConfirmSuggestionModal from './confirmSuggestionModal.svelte';
 	import type { movie } from './+page.server';
+	import backIcon from '$lib/images/back-icon.svg';
 
 	let modal: HTMLDialogElement;
 
@@ -37,6 +38,8 @@
 </script>
 
 <dialog bind:this={modal} on:close>
+	<button class="back-button" aria-label="Go back" on:click={() => modal.close()} />
+
 	<form>
 		<input
 			type="text"
@@ -139,5 +142,21 @@
 
 	.result-item-text {
 		font-size: medium;
+	}
+
+	.back-button {
+		margin-top: -0.5rem;
+		margin-left: -0.5rem;
+		border: none;
+		border-radius: 5px;
+		background: url(../lib/images/back-icon.svg) no-repeat 50% 50%;
+		background-size: 1.2rem 1.2rem;
+		height: 1.8rem;
+		aspect-ratio: 1;
+		cursor: pointer;
+	}
+
+	.back-button:hover {
+		background-color: rgb(195, 227, 233);
 	}
 </style>
