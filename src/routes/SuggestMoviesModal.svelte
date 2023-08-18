@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import PosterImage from './PosterImage.svelte';
 	import { searchResults } from '../stores/searchResults';
-	import ConfirmSuggestionModal from './confirmSuggestionModal.svelte';
+	import ConfirmSuggestionModal from './ConfirmSuggestionModal.svelte';
 	import type { movie } from './+page.server';
 
 	let modal: HTMLDialogElement;
