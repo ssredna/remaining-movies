@@ -43,6 +43,7 @@
 			name="movie-search"
 			aria-label="Søk opp film du vil foreslå"
 			placeholder="Søk etter film"
+			autocomplete="off"
 			on:input={(event) => search(event.currentTarget.value)}
 		/>
 	</form>
@@ -87,6 +88,7 @@
 		border-radius: 0.3rem;
 		filter: drop-shadow(3px 5px 10px rgba(0, 0, 0, 0.5));
 		background-color: rgb(165, 212, 223);
+		color: rgb(8, 14, 33);
 	}
 
 	dialog::backdrop {

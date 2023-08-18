@@ -31,13 +31,13 @@
 			<button on:click={() => modal.close()}>Skynd deg å se den da!</button>
 		{:else}
 			{#await watched}
-				Sjekker om jeg har sett denne...
+				Sjekker om jeg har sett {suggestedMovie.title}...
 			{:then haveWatched}
 				{#if haveWatched}
 					<p>Jeg har allerede sett {suggestedMovie.title}.</p>
 					<button on:click={() => modal.close()}>Bra for deg</button>
 				{:else}
-					<p>Vil du foreslå at jeg ser {suggestedMovie.title}?</p>
+					<p>Jeg har ikke sett {suggestedMovie.title}. Vil du foreslå at jeg ser den?</p>
 					<div class="buttons">
 						<button
 							on:click={() => {
@@ -58,6 +58,9 @@
 		width: 60%;
 		border: none;
 		border-radius: 0.3rem;
+		background-color: rgb(165, 212, 223);
+		color: rgb(8, 14, 33);
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 		display: flex;
 		align-items: center;
 		gap: 1rem;
@@ -68,8 +71,29 @@
 	}
 
 	.content {
+		width: 100%;
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		gap: 3rem;
+	}
+
+	.buttons {
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+	}
+
+	button {
+		min-width: 45%;
+		padding: 1rem;
+		border-radius: 3px;
+		background-color: rgb(240, 248, 249);
+		border: none;
+		cursor: pointer;
+	}
+
+	button:hover {
+		background-color: rgb(195, 227, 233);
 	}
 </style>
