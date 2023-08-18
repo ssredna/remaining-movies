@@ -2,11 +2,16 @@
 	import { onMount } from 'svelte';
 	import PosterImage from './PosterImage.svelte';
 	import { searchResults } from '../stores/searchResults';
+	import ConfirmSuggestionModal from './confirmSuggestionModal.svelte';
+	import type { movie } from './+page.server';
 
 	let modal: HTMLDialogElement;
 
 	let debounceTimer: number;
 	let searched = false;
+
+	let showConfirmModal = false;
+	let suggestedMovie: movie;
 
 	onMount(() => {
 		modal.showModal();
@@ -47,7 +52,13 @@
 	{:else if $searchResults.length}
 		<div class="search-results">
 			{#each $searchResults as movie}
-				<button class="result-item">
+				<button
+					class="result-item"
+					on:click={() => {
+						suggestedMovie = movie;
+						showConfirmModal = true;
+					}}
+				>
 					<PosterImage {...movie} size="small" />
 					<p class="result-item-text">
 						{movie.title}
@@ -57,6 +68,14 @@
 		</div>
 	{/if}
 </dialog>
+
+{#if showConfirmModal}
+	<ConfirmSuggestionModal
+		{suggestedMovie}
+		on:close={() => (showConfirmModal = false)}
+		on:suggested={() => modal.close()}
+	/>
+{/if}
 
 <style>
 	dialog {
