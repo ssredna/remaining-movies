@@ -32,7 +32,7 @@
 					searched = true;
 					searchResults.set(res);
 				});
-		}, 500);
+		}, 250);
 	}
 </script>
 
