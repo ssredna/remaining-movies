@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let value: string;
-	export let disabled: boolean;
+	export let disabled = false;
 </script>
 
 <input type="submit" {value} {disabled} />
@@ -8,14 +8,14 @@
 <style>
 	input {
 		display: block;
-		width: 100%;
+		width: var(--width, 100%);
 		padding: 1rem 0;
 		text-align: center;
 		transition: 0.5s;
 		color: white;
 		font-weight: 700;
 		font-size: 1rem;
-		border-radius: 8px;
+		border-radius: 5px;
 		border: 0px;
 		box-shadow: 0px 0px 14px -7px #f09819;
 		background-size: 200% auto;

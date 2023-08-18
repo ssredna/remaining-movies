@@ -3,6 +3,7 @@
 	import PosterImage from './PosterImage.svelte';
 	import type { movie } from './+page.server';
 	import { page } from '$app/stores';
+	import SuggestButton from './SuggestButton.svelte';
 
 	export let suggestedMovie: movie;
 
@@ -28,7 +29,12 @@
 	<div class="content">
 		{#if selectedMovieAlreadySuggested}
 			<p>Noen andre har allerede foreslått {suggestedMovie.title}.</p>
-			<button on:click={() => modal.close()}>Skynd deg å se den da!</button>
+			<button
+				on:click={() => {
+					modal.close();
+					dispatch('suggested');
+				}}>Skynd deg å se den da!</button
+			>
 		{:else}
 			{#await watched}
 				Sjekker om jeg har sett {suggestedMovie.title}...
@@ -38,15 +44,13 @@
 					<button on:click={() => modal.close()}>Bra for deg</button>
 				{:else}
 					<p>Jeg har ikke sett {suggestedMovie.title}. Vil du foreslå at jeg ser den?</p>
-					<div class="buttons">
-						<button
-							on:click={() => {
-								modal.close('suggested');
-								dispatch('suggested');
-							}}>Ja!</button
-						>
-						<button on:click={() => modal.close()}>Nei</button>
-					</div>
+					<form method="POST" action="?/suggest" class="buttons">
+						<input type="hidden" name="id" value={suggestedMovie?.id} />
+						<input type="hidden" name="title" value={suggestedMovie?.title} />
+						<input type="hidden" name="poster_path" value={suggestedMovie?.poster_path} />
+						<SuggestButton value="Ja!" --width="45%" />
+						<button on:click|preventDefault={() => modal.close()}>Nei</button>
+					</form>
 				{/if}
 			{/await}
 		{/if}
@@ -87,7 +91,7 @@
 	button {
 		min-width: 45%;
 		padding: 1rem;
-		border-radius: 3px;
+		border-radius: 5px;
 		background-color: rgb(240, 248, 249);
 		border: none;
 		cursor: pointer;
