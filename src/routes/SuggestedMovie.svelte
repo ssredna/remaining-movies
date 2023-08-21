@@ -21,7 +21,7 @@
 
 <form method="post" action="?/vote" class="suggestion-item">
 	<input type="hidden" name="id" value={movie.id} />
-	<PosterImage {...movie} size="small" />
+	<PosterImage poster_path={movie.poster_path} title={movie.title} size="small" />
 	<div class="suggestion-item-text">
 		<span class="suggestion-item-title">{movie.title}</span>
 		<br />

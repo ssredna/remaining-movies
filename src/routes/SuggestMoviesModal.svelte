@@ -64,7 +64,7 @@
 						showConfirmModal = true;
 					}}
 				>
-					<PosterImage {...movie} size="small" />
+					<PosterImage poster_path={movie.poster_path} title={movie.title} size="small" />
 					<p class="result-item-text">
 						{movie.title}
 					</p>

@@ -23,7 +23,7 @@
 </script>
 
 <dialog bind:this={modal} on:close>
-	<PosterImage {...suggestedMovie} size="large" />
+	<PosterImage poster_path={suggestedMovie.poster_path} title={suggestedMovie.title} size="large" />
 	<div class="content">
 		{#if selectedMovieAlreadySuggested}
 			<p>Noen andre har allerede foreslått {suggestedMovie.title}.</p>
