@@ -3,11 +3,14 @@
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import AnimatedHeader from './AnimatedHeader.svelte';
-	import SuggestMovies from './SuggestMovies.svelte';
+	import SuggestButton from './SuggestButton.svelte';
+	import SuggestMoviesModal from './SuggestMoviesModal.svelte';
 	import SuggestedMovie from './SuggestedMovie.svelte';
 
 	export let data;
 	export let form;
+
+	let showSuggestModal = false;
 
 	if (form?.successfullySuggestedMovieId && browser) {
 		localStorage.setItem(String(form.successfullySuggestedMovieId), '1');
@@ -38,7 +41,12 @@
 	</section>
 
 	<section class="suggestions">
-		<SuggestMovies />
+		<SuggestButton value="Foreslå film" on:click={() => (showSuggestModal = true)} />
+
+		{#if showSuggestModal}
+			<SuggestMoviesModal on:close={() => (showSuggestModal = false)} />
+		{/if}
+
 		<div class="suggested-movies">
 			<h2>Foreslåtte filmer:</h2>
 			<div class="suggestion-items">
