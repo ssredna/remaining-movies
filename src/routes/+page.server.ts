@@ -50,7 +50,18 @@ export const load = async ({ fetch }) => {
 		}
 	).then((res) => res.json());
 
-	const history: history[] = await fetch(
+	const watchedHistoryPromise: Promise<history[]> = fetch(
+		'https://api.trakt.tv/users/ssredna/watched/movies',
+		{
+			headers: {
+				'Content-Type': 'application/json',
+				'trakt-api-version': '2',
+				'trakt-api-key': VITE_TRAKT_CLIENT_ID
+			}
+		}
+	).then((res) => res.json());
+
+	const latestHistory: history[] = await fetch(
 		'https://api.trakt.tv/users/ssredna/history/movies?limit=3',
 		{
 			headers: {
@@ -62,7 +73,7 @@ export const load = async ({ fetch }) => {
 	).then((res) => res.json());
 
 	const latestMoviesTMDBData: movie[] = await Promise.all(
-		history.map(({ movie: { ids } }) =>
+		latestHistory.map(({ movie: { ids } }) =>
 			fetch(`https://api.themoviedb.org/3/movie/${ids.tmdb}?api_key=${VITE_TMDB_CLIENT_ID}`).then(
 				(res) => res.json()
 			)
@@ -70,7 +81,7 @@ export const load = async ({ fetch }) => {
 	);
 
 	const latestMovies = latestMoviesTMDBData.map(({ poster_path }, i) => ({
-		title: history[i].movie.title,
+		title: latestHistory[i].movie.title,
 		posterUrl: `https://image.tmdb.org/t/p/w400${poster_path}`
 	}));
 
@@ -78,12 +89,18 @@ export const load = async ({ fetch }) => {
 	const numberOfWatchedMovies = stats.movies.plays;
 
 	const suggestedMovies = await suggestedMoviesPromise;
-	suggestedMovies.sort((movieA, movieB) => movieB.votes - movieA.votes);
+	const watchedHistory = await watchedHistoryPromise;
+	const watchedHistoryIds = watchedHistory.map((historyItem) => historyItem.movie.ids.tmdb);
+
+	const unwatchedSuggestedMovies = suggestedMovies.filter(
+		(movie) => !watchedHistoryIds.includes(movie.id)
+	);
+	unwatchedSuggestedMovies.sort((movieA, movieB) => movieB.votes - movieA.votes);
 
 	return {
 		numberOfWatchedMovies,
 		latestMovies,
-		suggestedMovies
+		suggestedMovies: unwatchedSuggestedMovies
 	};
 };
 
