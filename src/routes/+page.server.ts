@@ -25,6 +25,8 @@ export interface movie {
 	poster_path: string;
 	title: string;
 	id: number;
+	release_date?: string;
+	release_year?: number;
 }
 
 export interface suggestedMovie extends movie {

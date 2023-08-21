@@ -65,9 +65,14 @@
 					}}
 				>
 					<PosterImage poster_path={movie.poster_path} title={movie.title} size="small" />
-					<p class="result-item-text">
-						{movie.title}
-					</p>
+					<div class="result-item-text">
+						<span class="result-item-title">
+							{movie.title}
+						</span>
+						{#if movie.release_year}
+							{movie.release_year}
+						{/if}
+					</div>
 				</button>
 			{/each}
 		</div>
@@ -151,6 +156,12 @@
 	}
 
 	.result-item-text {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+
+	.result-item-title {
 		font-size: medium;
 	}
 

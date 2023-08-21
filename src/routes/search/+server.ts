@@ -13,5 +13,10 @@ export async function GET({ url }) {
 		.then((res) => res.json())
 		.then((res) => res.results);
 
-	return json(movies);
+	const moviesWithReleaseYear = movies.map((movie) => ({
+		...movie,
+		release_year: movie.release_date ? new Date(movie.release_date).getFullYear() : undefined
+	}));
+
+	return json(moviesWithReleaseYear);
 }
