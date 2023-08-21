@@ -3,7 +3,7 @@
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import AnimatedHeader from './AnimatedHeader.svelte';
-	import SuggestButton from './SuggestButton.svelte';
+	import FancyButton from './FancyButton.svelte';
 	import SuggestMoviesModal from './SuggestMoviesModal.svelte';
 	import SuggestedMovie from './SuggestedMovie.svelte';
 
@@ -41,7 +41,7 @@
 	</section>
 
 	<section class="suggestions">
-		<SuggestButton value="Foreslå film" on:click={() => (showSuggestModal = true)} />
+		<FancyButton on:click={() => (showSuggestModal = true)}>Foreslå film</FancyButton>
 
 		{#if showSuggestModal}
 			<SuggestMoviesModal on:close={() => (showSuggestModal = false)} />

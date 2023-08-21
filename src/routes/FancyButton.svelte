@@ -1,12 +1,14 @@
 <script lang="ts">
-	export let value: string;
 	export let disabled = false;
+	export let submitButton = false;
 </script>
 
-<input type="submit" {value} {disabled} on:click />
+<button type={submitButton ? 'submit' : 'button'} {disabled} on:click>
+	<slot />
+</button>
 
 <style>
-	input {
+	button {
 		display: block;
 		width: var(--width, 100%);
 		padding: 1rem 0;
@@ -28,15 +30,15 @@
 		cursor: pointer;
 	}
 
-	input:hover {
+	button:hover {
 		background-position: right center;
 	}
 
-	input:active {
+	button:active {
 		transform: scale(0.95);
 	}
 
-	input:disabled {
+	button:disabled {
 		background-image: none;
 		color: rgb(150, 54, 70);
 		font-weight: normal;

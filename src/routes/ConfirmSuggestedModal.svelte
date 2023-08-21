@@ -3,7 +3,7 @@
 	import PosterImage from './PosterImage.svelte';
 	import type { movie } from './+page.server';
 	import { page } from '$app/stores';
-	import SuggestButton from './SuggestButton.svelte';
+	import FancyButton from './FancyButton.svelte';
 
 	export let suggestedMovie: movie;
 
@@ -41,7 +41,7 @@
 						<input type="hidden" name="id" value={suggestedMovie?.id} />
 						<input type="hidden" name="title" value={suggestedMovie?.title} />
 						<input type="hidden" name="poster_path" value={suggestedMovie?.poster_path} />
-						<SuggestButton value="Ja!" --width="45%" />
+						<FancyButton submitButton --width="45%">Ja!</FancyButton>
 						<button on:click|preventDefault={() => modal.close()}>Nei</button>
 					</form>
 				{/if}
