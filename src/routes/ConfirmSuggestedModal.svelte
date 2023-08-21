@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import PosterImage from './PosterImage.svelte';
 	import type { movie } from './+page.server';
 	import { page } from '$app/stores';
