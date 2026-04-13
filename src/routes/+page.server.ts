@@ -37,6 +37,7 @@ export const load = async ({ fetch }) => {
 	const statsPromise: Promise<stats> = fetch('https://api.trakt.tv/users/ssredna/stats', {
 		headers: {
 			'Content-Type': 'application/json',
+			'User-Agent': 'anesh.no',
 			'trakt-api-version': '2',
 			'trakt-api-key': VITE_TRAKT_CLIENT_ID
 		}
@@ -57,6 +58,7 @@ export const load = async ({ fetch }) => {
 		{
 			headers: {
 				'Content-Type': 'application/json',
+				'User-Agent': 'anesh.no',
 				'trakt-api-version': '2',
 				'trakt-api-key': VITE_TRAKT_CLIENT_ID
 			}
@@ -68,6 +70,7 @@ export const load = async ({ fetch }) => {
 		{
 			headers: {
 				'Content-Type': 'application/json',
+				'User-Agent': 'anesh.no',
 				'trakt-api-version': '2',
 				'trakt-api-key': VITE_TRAKT_CLIENT_ID
 			}
@@ -121,6 +124,7 @@ export const actions = {
 			{
 				headers: {
 					'Content-Type': 'application/json',
+					'User-Agent': 'anesh.no',
 					'trakt-api-version': '2',
 					'trakt-api-key': VITE_TRAKT_CLIENT_ID
 				}

@@ -10,6 +10,7 @@ export async function GET({ url }) {
 		{
 			headers: {
 				'Content-Type': 'application/json',
+				'User-Agent': 'anesh.no',
 				'trakt-api-version': '2',
 				'trakt-api-key': VITE_TRAKT_CLIENT_ID
 			}
