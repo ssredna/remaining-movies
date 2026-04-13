@@ -1,10 +1,18 @@
 <script lang="ts">
-	export let disabled = false;
-	export let submitButton = false;
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+
+	interface Props {
+		disabled?: boolean;
+		submitButton?: boolean;
+		onclick?: HTMLButtonAttributes['onclick'];
+		children?: import('svelte').Snippet;
+	}
+
+	let { disabled = false, submitButton = false, onclick, children }: Props = $props();
 </script>
 
-<button type={submitButton ? 'submit' : 'button'} {disabled} on:click>
-	<slot />
+<button type={submitButton ? 'submit' : 'button'} {disabled} {onclick}>
+	{@render children?.()}
 </button>
 
 <style>

@@ -1,5 +1,17 @@
+<script lang="ts">
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
+</script>
+
 <h1 class="linear-wipe">
-	<slot>????</slot>
+	{#if children}
+		{@render children()}
+	{:else}
+		????
+	{/if}
 </h1>
 
 <style>

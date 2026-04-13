@@ -3,7 +3,11 @@
 	import type { suggestedMovie } from './+page.server';
 	import PosterImage from './PosterImage.svelte';
 
-	export let movie: suggestedMovie;
+	interface Props {
+		movie: suggestedMovie;
+	}
+
+	let { movie }: Props = $props();
 
 	function handleVoteClick(id: number) {
 		if (browser) {
@@ -33,9 +37,9 @@
 	<button
 		aria-label="Stem på film"
 		class="vote-button"
-		on:click={() => handleVoteClick(movie.id)}
+		onclick={() => handleVoteClick(movie.id)}
 		disabled={haveVotedForMovie(movie.id)}
-	/>
+	></button>
 </form>
 
 <style>

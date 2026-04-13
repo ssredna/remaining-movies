@@ -1,17 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import type { HTMLDialogAttributes } from 'svelte/elements';
 	import PosterImage from './PosterImage.svelte';
 	import { searchResults } from '../stores/searchResults';
 	import ConfirmSuggestedModal from './ConfirmSuggestedModal.svelte';
 	import type { movie } from './+page.server';
 
-	let modal: HTMLDialogElement;
+	interface Props {
+		onclose?: HTMLDialogAttributes['onclose'];
+	}
+
+	let { onclose }: Props = $props();
+
+	let modal = $state() as HTMLDialogElement;
 
 	let debounceTimer: number;
-	let searched = false;
+	let searched = $state(false);
 
-	let showConfirmModal = false;
-	let suggestedMovie: movie;
+	let showConfirmModal = $state(false);
+	let suggestedMovie = $state<movie | null>(null);
 
 	onMount(() => {
 		modal.showModal();
@@ -36,11 +43,11 @@
 	}
 </script>
 
-<dialog bind:this={modal} on:close>
-	<button class="back-button" aria-label="Go back" on:click={() => modal.close()} />
+<dialog bind:this={modal} {onclose}>
+	<button class="back-button" aria-label="Go back" onclick={() => modal.close()}></button>
 
 	<form>
-		<!-- svelte-ignore a11y-autofocus -->
+		<!-- svelte-ignore a11y_autofocus -->
 		<input
 			type="text"
 			name="movie-search"
@@ -48,7 +55,7 @@
 			placeholder="Søk etter film"
 			autocomplete="off"
 			autofocus
-			on:input={(event) => search(event.currentTarget.value)}
+			oninput={(event) => search(event.currentTarget.value)}
 		/>
 	</form>
 
@@ -59,7 +66,7 @@
 			{#each $searchResults as movie}
 				<button
 					class="result-item"
-					on:click={() => {
+					onclick={() => {
 						suggestedMovie = movie;
 						showConfirmModal = true;
 					}}
@@ -79,8 +86,8 @@
 	{/if}
 </dialog>
 
-{#if showConfirmModal}
-	<ConfirmSuggestedModal {suggestedMovie} on:close={() => (showConfirmModal = false)} />
+{#if showConfirmModal && suggestedMovie}
+	<ConfirmSuggestedModal {suggestedMovie} onclose={() => (showConfirmModal = false)} />
 {/if}
 
 <style>

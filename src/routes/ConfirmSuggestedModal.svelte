@@ -1,13 +1,20 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
 	import { onMount } from 'svelte';
+	import type { HTMLDialogAttributes } from 'svelte/elements';
 	import PosterImage from './PosterImage.svelte';
 	import type { movie } from './+page.server';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import FancyButton from './FancyButton.svelte';
 
-	export let suggestedMovie: movie;
+	interface Props {
+		suggestedMovie: movie;
+		onclose?: HTMLDialogAttributes['onclose'];
+	}
 
-	let modal: HTMLDialogElement;
+	let { suggestedMovie, onclose }: Props = $props();
+
+	let modal = $state() as HTMLDialogElement;
 
 	const watched: Promise<boolean> = fetch(`/watched?id=${suggestedMovie.id}`).then((res) =>
 		res.json()
@@ -17,24 +24,26 @@
 		modal.showModal();
 	});
 
-	$: selectedMovieAlreadySuggested = $page.data.suggestedMovies
-		? $page.data.suggestedMovies.map((movie: movie) => movie.id).includes(suggestedMovie.id)
-		: false;
+	let selectedMovieAlreadySuggested = $derived(
+		page.data.suggestedMovies
+			? page.data.suggestedMovies.map((movie: movie) => movie.id).includes(suggestedMovie.id)
+			: false
+	);
 </script>
 
-<dialog bind:this={modal} on:close>
+<dialog bind:this={modal} {onclose}>
 	<PosterImage poster_path={suggestedMovie.poster_path} title={suggestedMovie.title} size="large" />
 	<div class="content">
 		{#if selectedMovieAlreadySuggested}
 			<p>Noen andre har allerede foreslått {suggestedMovie.title}.</p>
-			<button on:click={() => modal.close()}>Skynd deg å se den da!</button>
+			<button onclick={() => modal.close()}>Skynd deg å se den da!</button>
 		{:else}
 			{#await watched}
 				Sjekker om jeg har sett {suggestedMovie.title}...
 			{:then haveWatched}
 				{#if haveWatched}
 					<p>Jeg har allerede sett {suggestedMovie.title}.</p>
-					<button on:click={() => modal.close()}>Bra for deg</button>
+					<button onclick={() => modal.close()}>Bra for deg</button>
 				{:else}
 					<p>Jeg har ikke sett {suggestedMovie.title}. Vil du foreslå at jeg ser den?</p>
 					<form method="POST" action="?/suggest" class="buttons">
@@ -42,7 +51,7 @@
 						<input type="hidden" name="title" value={suggestedMovie?.title} />
 						<input type="hidden" name="poster_path" value={suggestedMovie?.poster_path} />
 						<FancyButton submitButton --width="45%">Ja!</FancyButton>
-						<button on:click|preventDefault={() => modal.close()}>Nei</button>
+						<button onclick={preventDefault(() => modal.close())}>Nei</button>
 					</form>
 				{/if}
 			{/await}

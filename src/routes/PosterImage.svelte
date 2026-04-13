@@ -6,20 +6,25 @@
 		smallPosterUrlFromPosterPath
 	} from '$lib/utils';
 
-	export let size: 'small' | 'medium' | 'large';
-	export let poster_path: string;
-	export let title: string;
+	interface Props {
+		size: 'small' | 'medium' | 'large';
+		poster_path: string;
+		title: string;
+	}
 
-	let image: HTMLImageElement;
+	let { size, poster_path, title }: Props = $props();
 
-	$: posterUrl =
+	let image = $state() as HTMLImageElement;
+
+	let posterUrl = $derived(
 		size === 'small'
 			? smallPosterUrlFromPosterPath(poster_path)
 			: size === 'medium'
-			? mediumPosterUrlFromPosterPath(poster_path)
-			: size === 'large'
-			? largePosterUrlFromPosterPath(poster_path)
-			: undefined;
+				? mediumPosterUrlFromPosterPath(poster_path)
+				: size === 'large'
+					? largePosterUrlFromPosterPath(poster_path)
+					: undefined
+	);
 </script>
 
 <img
@@ -29,7 +34,7 @@
 	class:small={size === 'small'}
 	class:medium={size === 'medium'}
 	class:large={size === 'large'}
-	on:error={() => {
+	onerror={() => {
 		image.src = noImage;
 	}}
 />

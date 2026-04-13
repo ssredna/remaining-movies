@@ -7,10 +7,9 @@
 	import SuggestMoviesModal from './SuggestMoviesModal.svelte';
 	import SuggestedMovie from './SuggestedMovie.svelte';
 
-	export let data;
-	export let form;
+	let { data, form } = $props();
 
-	let showSuggestModal = false;
+	let showSuggestModal = $state(false);
 
 	if (form?.successfullySuggestedMovieId && browser) {
 		localStorage.setItem(String(form.successfullySuggestedMovieId), '1');
@@ -41,10 +40,10 @@
 	</section>
 
 	<section class="suggestions">
-		<FancyButton on:click={() => (showSuggestModal = true)}>Foreslå film</FancyButton>
+		<FancyButton onclick={() => (showSuggestModal = true)}>Foreslå film</FancyButton>
 
 		{#if showSuggestModal}
-			<SuggestMoviesModal on:close={() => (showSuggestModal = false)} />
+			<SuggestMoviesModal onclose={() => (showSuggestModal = false)} />
 		{/if}
 
 		<div class="suggested-movies">
