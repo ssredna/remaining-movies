@@ -8,34 +8,33 @@
 
 	interface Props {
 		size: 'small' | 'medium' | 'large';
-		poster_path: string;
+		poster_path: string | null;
 		title: string;
 	}
 
 	let { size, poster_path, title }: Props = $props();
 
-	let image = $state() as HTMLImageElement;
-
 	let posterUrl = $derived(
-		size === 'small'
-			? smallPosterUrlFromPosterPath(poster_path)
-			: size === 'medium'
-				? mediumPosterUrlFromPosterPath(poster_path)
-				: size === 'large'
-					? largePosterUrlFromPosterPath(poster_path)
-					: undefined
+		!poster_path
+			? noImage
+			: size === 'small'
+				? smallPosterUrlFromPosterPath(poster_path)
+				: size === 'medium'
+					? mediumPosterUrlFromPosterPath(poster_path)
+					: size === 'large'
+						? largePosterUrlFromPosterPath(poster_path)
+						: undefined
 	);
 </script>
 
 <img
-	bind:this={image}
 	src={posterUrl}
 	alt={title}
 	class:small={size === 'small'}
 	class:medium={size === 'medium'}
 	class:large={size === 'large'}
-	onerror={() => {
-		image.src = noImage;
+	onerror={(event) => {
+		(event.currentTarget as HTMLImageElement).src = noImage;
 	}}
 />
 
