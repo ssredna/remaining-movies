@@ -4,7 +4,7 @@ import {
 	VITE_TMDB_CLIENT_ID,
 	VITE_TRAKT_CLIENT_ID
 } from '$env/static/private';
-import { fetchJson, fetchOk } from '$lib/server/fetch';
+import { fetchJson, fetchOk, fetchOptionalJson } from '$lib/server/fetch';
 import {
 	HistoryArraySchema,
 	MovieSchema,
@@ -27,7 +27,7 @@ const traktHeaders = {
 
 export const load = async ({ fetch }) => {
 	const [stats, suggestedMovies, watchedHistory, latestHistory] = await Promise.all([
-		fetchJson(
+		fetchOptionalJson(
 			fetch,
 			'https://api.trakt.tv/users/ssredna/stats',
 			{
@@ -85,7 +85,7 @@ export const load = async ({ fetch }) => {
 		posterUrl: `https://image.tmdb.org/t/p/w400${poster_path}`
 	}));
 
-	const numberOfWatchedMovies = stats.movies.plays;
+	const numberOfWatchedMovies = stats?.movies.plays ?? null;
 	const watchedHistoryIds = watchedHistory.map((historyItem) => historyItem.movie.ids.tmdb);
 
 	const unwatchedSuggestedMovies = suggestedMovies.filter(
@@ -95,6 +95,7 @@ export const load = async ({ fetch }) => {
 
 	return {
 		numberOfWatchedMovies,
+		statsUnavailable: stats === null,
 		latestMovies,
 		suggestedMovies: unwatchedSuggestedMovies
 	};

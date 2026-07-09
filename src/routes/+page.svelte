@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import tmdbLogo from '$lib/images/tmdb-logo.svg';
 	import traktLogo from '$lib/images/trakt-logo.svg';
 	import AnimatedHeader from './AnimatedHeader.svelte';
@@ -11,9 +10,11 @@
 
 	let showSuggestModal = $state(false);
 
-	if (form?.successfullySuggestedMovieId && browser) {
-		localStorage.setItem(String(form.successfullySuggestedMovieId), '1');
-	}
+	$effect(() => {
+		if (form?.successfullySuggestedMovieId) {
+			localStorage.setItem(String(form.successfullySuggestedMovieId), '1');
+		}
+	});
 </script>
 
 <svelte:head>
@@ -22,15 +23,19 @@
 
 <div class="container">
 	<section class="hero">
-		<p>jeg har sett</p>
-		<AnimatedHeader>{data.numberOfWatchedMovies}</AnimatedHeader>
-		<p>filmer</p>
+		{#if data.numberOfWatchedMovies !== null}
+			<p>jeg har sett</p>
+			<AnimatedHeader>{data.numberOfWatchedMovies}</AnimatedHeader>
+			<p>filmer</p>
+		{:else if data.statsUnavailable}
+			<p class="stats-unavailable">Antall filmer jeg har sett kunne ikke lastes akkurat nå.</p>
+		{/if}
 	</section>
 
 	<section class="history">
 		<h2>De siste filmene jeg har sett:</h2>
 		<div class="latest-movies-container">
-			{#each data.latestMovies as movie}
+			{#each data.latestMovies as movie (movie.title)}
 				<div class="history-item">
 					<p>{movie.title}</p>
 					<img src={movie.posterUrl} alt={movie.title} class="poster" />
@@ -49,7 +54,7 @@
 		<div class="suggested-movies">
 			<h2>Foreslåtte filmer:</h2>
 			<div class="suggestion-items">
-				{#each data.suggestedMovies as suggestedMovie}
+				{#each data.suggestedMovies as suggestedMovie (suggestedMovie.id)}
 					<SuggestedMovie movie={suggestedMovie} />
 				{/each}
 			</div>
@@ -93,6 +98,10 @@
 		align-items: center;
 		padding-top: 22vh;
 		padding-bottom: 28vh;
+	}
+
+	.stats-unavailable {
+		font-size: 1rem;
 	}
 
 	.history {

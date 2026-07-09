@@ -83,6 +83,62 @@ export async function fetchJson<T>(
 }
 
 /**
+ * Fetch and parse optional JSON from an upstream service.
+ *
+ * Use this for non-critical data where a failed upstream call should be logged,
+ * but should not prevent the rest of the page from rendering.
+ */
+export async function fetchOptionalJson<T>(
+	fetchFn: ServerFetch,
+	input: RequestInfo | URL,
+	init: RequestInit | undefined,
+	serviceName: string,
+	schema?: Schema<T>
+): Promise<T | null> {
+	let response: Response;
+
+	try {
+		response = await fetchFn(input, init);
+	} catch (cause) {
+		console.error(`${serviceName} request failed`, cause);
+		return null;
+	}
+
+	if (!response.ok) {
+		const body = await response.text().catch(() => '');
+		console.error(`${serviceName} returned ${response.status}`, body);
+		return null;
+	}
+
+	let data: unknown;
+
+	try {
+		data = await response.json();
+	} catch (cause) {
+		console.error(`${serviceName} returned invalid JSON`, cause);
+		return null;
+	}
+
+	if (schema) {
+		const result = v.safeParse(schema, data);
+
+		if (!result.success) {
+			console.error(`${serviceName} returned unexpected response shape`, result.issues);
+			return null;
+		}
+
+		return result.output;
+	}
+
+	if (data === undefined) {
+		console.error(`${serviceName} returned no JSON data`);
+		return null;
+	}
+
+	return data as T;
+}
+
+/**
  * Fetch an upstream service when only success/failure matters.
  *
  * This is for write calls like Supabase inserts/RPCs where we intentionally do
