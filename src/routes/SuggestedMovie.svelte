@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import type { suggestedMovie } from './+page.server';
+	import { voteForMovie } from './suggestions.remote';
+	import type { suggestedMovie } from './types';
 	import PosterImage from './PosterImage.svelte';
 
 	interface Props {
@@ -8,6 +9,7 @@
 	}
 
 	let { movie }: Props = $props();
+	let voteForm = $derived(voteForMovie.for(String(movie.id)));
 
 	function handleVoteClick(id: number) {
 		if (browser) {
@@ -23,8 +25,15 @@
 	}
 </script>
 
-<form method="post" action="?/vote" class="suggestion-item">
-	<input type="hidden" name="id" value={movie.id} />
+<form
+	{...voteForm.enhance(async (form) => {
+		if (await form.submit()) {
+			handleVoteClick(movie.id);
+		}
+	})}
+	class="suggestion-item"
+>
+	<input {...voteForm.fields.id.as('hidden', String(movie.id))} />
 	<PosterImage poster_path={movie.poster_path} title={movie.title} size="small" />
 	<div class="suggestion-item-text">
 		<span class="suggestion-item-title">{movie.title}</span>
@@ -37,8 +46,7 @@
 	<button
 		aria-label="Stem på film"
 		class="vote-button"
-		onclick={() => handleVoteClick(movie.id)}
-		disabled={haveVotedForMovie(movie.id)}
+		disabled={!!voteForm.pending || haveVotedForMovie(movie.id)}
 	></button>
 </form>
 

@@ -1,60 +1,60 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
-	import { onMount } from 'svelte';
 	import type { HTMLDialogAttributes } from 'svelte/elements';
 	import PosterImage from './PosterImage.svelte';
-	import type { movie } from './+page.server';
-	import { page } from '$app/state';
+	import { suggestMovie } from './suggestions.remote';
+	import type { movie, suggestedMovie as suggestedMovieType } from './types';
 	import FancyButton from './FancyButton.svelte';
 
 	interface Props {
 		suggestedMovie: movie;
+		suggestedMovies: suggestedMovieType[];
+		watchedMovieIds: number[];
 		onclose?: HTMLDialogAttributes['onclose'];
 	}
 
-	let { suggestedMovie, onclose }: Props = $props();
+	let { suggestedMovie, suggestedMovies, watchedMovieIds, onclose }: Props = $props();
 
 	let modal = $state() as HTMLDialogElement;
+	let suggestForm = $derived(suggestMovie.for(String(suggestedMovie.id)));
 
-	const watched: Promise<boolean> = fetch(`/watched?id=${suggestedMovie.id}`).then((res) =>
-		res.json()
-	);
-
-	onMount(() => {
-		modal.showModal();
-	});
+	function showDialog(dialog: HTMLDialogElement) {
+		modal = dialog;
+		dialog.showModal();
+	}
 
 	let selectedMovieAlreadySuggested = $derived(
-		page.data.suggestedMovies
-			? page.data.suggestedMovies.map((movie: movie) => movie.id).includes(suggestedMovie.id)
-			: false
+		suggestedMovies.map((movie) => movie.id).includes(suggestedMovie.id)
 	);
+	let haveWatched = $derived(watchedMovieIds.includes(suggestedMovie.id));
 </script>
 
-<dialog bind:this={modal} {onclose}>
+<dialog {@attach showDialog} {onclose}>
 	<PosterImage poster_path={suggestedMovie.poster_path} title={suggestedMovie.title} size="large" />
 	<div class="content">
 		{#if selectedMovieAlreadySuggested}
 			<p>Noen andre har allerede foreslått {suggestedMovie.title}.</p>
 			<button onclick={() => modal.close()}>Skynd deg å se den da!</button>
+		{:else if haveWatched}
+			<p>Jeg har allerede sett {suggestedMovie.title}.</p>
+			<button onclick={() => modal.close()}>Bra for deg</button>
 		{:else}
-			{#await watched}
-				Sjekker om jeg har sett {suggestedMovie.title}...
-			{:then haveWatched}
-				{#if haveWatched}
-					<p>Jeg har allerede sett {suggestedMovie.title}.</p>
-					<button onclick={() => modal.close()}>Bra for deg</button>
-				{:else}
-					<p>Jeg har ikke sett {suggestedMovie.title}. Vil du foreslå at jeg ser den?</p>
-					<form method="POST" action="?/suggest" class="buttons">
-						<input type="hidden" name="id" value={suggestedMovie?.id} />
-						<input type="hidden" name="title" value={suggestedMovie?.title} />
-						<input type="hidden" name="poster_path" value={suggestedMovie?.poster_path} />
-						<FancyButton submitButton --width="45%">Ja!</FancyButton>
-						<button onclick={preventDefault(() => modal.close())}>Nei</button>
-					</form>
-				{/if}
-			{/await}
+			<p>Jeg har ikke sett {suggestedMovie.title}. Vil du foreslå at jeg ser den?</p>
+			<form
+				{...suggestForm.enhance(async (form) => {
+					if (await form.submit()) {
+						localStorage.setItem(String(suggestedMovie.id), '1');
+						modal.close();
+					}
+				})}
+				class="buttons"
+			>
+				<input {...suggestForm.fields.id.as('hidden', String(suggestedMovie.id))} />
+				{#each suggestForm.fields.id.issues() as issue (issue.message)}
+					<p class="issue">{issue.message}</p>
+				{/each}
+				<FancyButton submitButton disabled={!!suggestForm.pending} --width="45%">Ja!</FancyButton>
+				<button type="button" onclick={() => modal.close()}>Nei</button>
+			</form>
 		{/if}
 	</div>
 </dialog>

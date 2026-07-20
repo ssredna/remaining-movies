@@ -5,16 +5,10 @@
 	import FancyButton from './FancyButton.svelte';
 	import SuggestMoviesModal from './SuggestMoviesModal.svelte';
 	import SuggestedMovie from './SuggestedMovie.svelte';
-
-	let { data, form } = $props();
+	import { getSuggestions } from './suggestions.remote';
+	import { getLatestMovies, getWatchedStats } from './trakt.remote';
 
 	let showSuggestModal = $state(false);
-
-	$effect(() => {
-		if (form?.successfullySuggestedMovieId) {
-			localStorage.setItem(String(form.successfullySuggestedMovieId), '1');
-		}
-	});
 </script>
 
 <svelte:head>
@@ -23,43 +17,59 @@
 
 <div class="container">
 	<section class="hero">
-		{#if data.numberOfWatchedMovies !== null}
+		<svelte:boundary failed={statsFailed}>
 			<p>jeg har sett</p>
-			<AnimatedHeader>{data.numberOfWatchedMovies}</AnimatedHeader>
+			<AnimatedHeader>{await getWatchedStats()}</AnimatedHeader>
 			<p>filmer</p>
-		{:else if data.statsUnavailable}
+		</svelte:boundary>
+
+		{#snippet statsFailed()}
 			<p class="stats-unavailable">Antall filmer jeg har sett kunne ikke lastes akkurat nå.</p>
-		{/if}
+		{/snippet}
 	</section>
 
 	<section class="history">
-		<h2>De siste filmene jeg har sett:</h2>
-		<div class="latest-movies-container">
-			{#each data.latestMovies as movie (movie.title)}
-				<div class="history-item">
-					<p>{movie.title}</p>
-					<img src={movie.posterUrl} alt={movie.title} class="poster" />
-				</div>
-			{/each}
-		</div>
-	</section>
-
-	<section class="suggestions">
-		<FancyButton onclick={() => (showSuggestModal = true)}>Foreslå film</FancyButton>
-
-		{#if showSuggestModal}
-			<SuggestMoviesModal onclose={() => (showSuggestModal = false)} />
-		{/if}
-
-		<div class="suggested-movies">
-			<h2>Foreslåtte filmer:</h2>
-			<div class="suggestion-items">
-				{#each data.suggestedMovies as suggestedMovie (suggestedMovie.id)}
-					<SuggestedMovie movie={suggestedMovie} />
+		<svelte:boundary failed={latestMoviesFailed}>
+			<h2>De siste filmene jeg har sett:</h2>
+			<div class="latest-movies-container">
+				{#each await getLatestMovies() as movie (movie.title)}
+					<div class="history-item">
+						<p>{movie.title}</p>
+						<img src={movie.posterUrl} alt={movie.title} class="poster" />
+					</div>
 				{/each}
 			</div>
-		</div>
+		</svelte:boundary>
 	</section>
+	{#snippet latestMoviesFailed()}
+		<p class="section-unavailable">De siste filmene kunne ikke lastes akkurat nå.</p>
+	{/snippet}
+
+	<section class="suggestions">
+		<svelte:boundary failed={suggestionsFailed}>
+			<FancyButton onclick={() => (showSuggestModal = true)}>Foreslå film</FancyButton>
+
+			{#if showSuggestModal}
+				<SuggestMoviesModal
+					suggestedMovies={(await getSuggestions()).suggestedMovies}
+					watchedMovieIds={(await getSuggestions()).watchedMovieIds}
+					onclose={() => (showSuggestModal = false)}
+				/>
+			{/if}
+
+			<div class="suggested-movies">
+				<h2>Foreslåtte filmer:</h2>
+				<div class="suggestion-items">
+					{#each (await getSuggestions()).suggestedMovies as suggestedMovie (suggestedMovie.id)}
+						<SuggestedMovie movie={suggestedMovie} />
+					{/each}
+				</div>
+			</div>
+		</svelte:boundary>
+	</section>
+	{#snippet suggestionsFailed()}
+		<p class="section-unavailable">Forslagene kunne ikke lastes akkurat nå.</p>
+	{/snippet}
 
 	<footer>
 		<img class="logo" src={traktLogo} alt="Trakt logo" />

@@ -1,11 +1,13 @@
 import { VITE_TMDB_CLIENT_ID } from '$env/static/private';
 import { fetchJson } from '$lib/server/fetch';
 import { SearchResponseSchema } from '$lib/server/schemas';
-import { json } from '@sveltejs/kit';
+import { getRequestEvent, query } from '$app/server';
+import * as v from 'valibot';
 
-export async function GET({ url, fetch }) {
-	const searchString = url.searchParams.get('q') ?? '';
+const SearchSchema = v.pipe(v.string(), v.trim(), v.nonEmpty(), v.maxLength(100));
 
+export const searchMovies = query(SearchSchema, async (searchString) => {
+	const { fetch } = getRequestEvent();
 	const tmdbQuery =
 		`https://api.themoviedb.org/3/search/movie?api_key=${VITE_TMDB_CLIENT_ID}&query=` +
 		encodeURIComponent(searchString);
@@ -18,10 +20,8 @@ export async function GET({ url, fetch }) {
 		SearchResponseSchema
 	);
 
-	const moviesWithReleaseYear = movies.map((movie) => ({
+	return movies.map((movie) => ({
 		...movie,
 		release_year: movie.release_date ? new Date(movie.release_date).getFullYear() : undefined
 	}));
-
-	return json(moviesWithReleaseYear);
-}
+});

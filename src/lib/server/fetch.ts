@@ -3,6 +3,14 @@ import * as v from 'valibot';
 
 type ServerFetch = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 type Schema<T> = v.BaseSchema<unknown, T, v.BaseIssue<unknown>>;
+const UPSTREAM_TIMEOUT_MS = 10_000;
+
+function withTimeout(init: RequestInit | undefined): RequestInit {
+	const timeoutSignal = AbortSignal.timeout(UPSTREAM_TIMEOUT_MS);
+	const signal = init?.signal ? AbortSignal.any([init.signal, timeoutSignal]) : timeoutSignal;
+
+	return { ...init, signal };
+}
 
 function upstreamError(message: string): never {
 	error(502, message);
@@ -24,7 +32,7 @@ async function fetchResponse(
 	let response: Response;
 
 	try {
-		response = await fetchFn(input, init);
+		response = await fetchFn(input, withTimeout(init));
 	} catch (cause) {
 		console.error(`${serviceName} request failed`, cause);
 		upstreamError('Upstream service request failed');
@@ -98,7 +106,7 @@ export async function fetchOptionalJson<T>(
 	let response: Response;
 
 	try {
-		response = await fetchFn(input, init);
+		response = await fetchFn(input, withTimeout(init));
 	} catch (cause) {
 		console.error(`${serviceName} request failed`, cause);
 		return null;

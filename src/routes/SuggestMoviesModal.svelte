@@ -1,52 +1,54 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { HTMLDialogAttributes } from 'svelte/elements';
 	import PosterImage from './PosterImage.svelte';
-	import { searchResults } from '../stores/searchResults';
 	import ConfirmSuggestedModal from './ConfirmSuggestedModal.svelte';
-	import type { movie } from './+page.server';
+	import { searchMovies } from './search.remote';
+	import type { movie, suggestedMovie as suggestedMovieType } from './types';
 
 	interface Props {
+		suggestedMovies: suggestedMovieType[];
+		watchedMovieIds: number[];
 		onclose?: HTMLDialogAttributes['onclose'];
 	}
 
-	let { onclose }: Props = $props();
+	let { suggestedMovies, watchedMovieIds, onclose }: Props = $props();
 
 	let modal = $state() as HTMLDialogElement;
 
 	let debounceTimer: number;
 	let searched = $state(false);
+	let searchString = $state('');
+	let searchQuery = $derived(searchString ? searchMovies(searchString) : null);
 
 	let showConfirmModal = $state(false);
 	let suggestedMovie = $state<movie | null>(null);
 
-	onMount(() => {
-		modal.showModal();
-	});
+	function showDialog(dialog: HTMLDialogElement) {
+		modal = dialog;
+		dialog.showModal();
+	}
 
-	async function search(searchString: string) {
+	function search(value: string) {
 		clearTimeout(debounceTimer);
+		const query = value.trim();
+		searched = false;
+		searchString = '';
 
-		if (!searchString) {
-			searched = false;
+		if (!query) {
 			return;
 		}
 
 		debounceTimer = setTimeout(() => {
-			fetch(`/search?q=${searchString}`)
-				.then((res) => res.json())
-				.then((res) => {
-					searched = true;
-					searchResults.set(res);
-				});
+			searchString = query;
+			searched = true;
 		}, 250);
 	}
 </script>
 
-<dialog bind:this={modal} {onclose}>
+<dialog {@attach showDialog} {onclose}>
 	<button class="back-button" aria-label="Go back" onclick={() => modal.close()}></button>
 
-	<form>
+	<form onsubmit={(event) => event.preventDefault()}>
 		<!-- svelte-ignore a11y_autofocus -->
 		<input
 			type="text"
@@ -54,16 +56,21 @@
 			aria-label="Søk opp film du vil foreslå"
 			placeholder="Søk etter film"
 			autocomplete="off"
+			maxlength="100"
 			autofocus
 			oninput={(event) => search(event.currentTarget.value)}
 		/>
 	</form>
 
-	{#if searched && $searchResults.length === 0}
+	{#if searchQuery?.error}
+		<div class="no-result">Søket kunne ikke lastes akkurat nå.</div>
+	{:else if searchQuery?.loading}
+		<div class="no-result">Søker...</div>
+	{:else if searched && searchQuery?.current?.length === 0}
 		<div class="no-result">Ingen søkeresultat</div>
-	{:else if $searchResults.length}
+	{:else if searchQuery?.current?.length}
 		<div class="search-results">
-			{#each $searchResults as movie}
+			{#each searchQuery.current as movie (movie.id)}
 				<button
 					class="result-item"
 					onclick={() => {
@@ -87,7 +94,12 @@
 </dialog>
 
 {#if showConfirmModal && suggestedMovie}
-	<ConfirmSuggestedModal {suggestedMovie} onclose={() => (showConfirmModal = false)} />
+	<ConfirmSuggestedModal
+		{suggestedMovie}
+		{suggestedMovies}
+		{watchedMovieIds}
+		onclose={() => (showConfirmModal = false)}
+	/>
 {/if}
 
 <style>
